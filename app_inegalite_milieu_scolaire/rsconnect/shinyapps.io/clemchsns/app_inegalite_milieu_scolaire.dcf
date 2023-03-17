@@ -1,0 +1,13 @@
+name: app_inegalite_milieu_scolaire
+title: app_inegalite_milieu_scolaire
+username:
+account: clemchsns
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8595441
+bundleId: 6970757
+url: https://clemchsns.shinyapps.io/app_inegalite_milieu_scolaire/
+when: 1679051253.92415
+lastSyncTime: 1679051253.92417
+asMultiple: FALSE
+asStatic: FALSE
