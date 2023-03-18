@@ -238,7 +238,7 @@ val_college_PR <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PR),
                     mean(fr_indicateur_segreg_college$proportion_defav_PR))
 
 df_comparaison_pcs_PU_PR <- data.frame(PCS, college_prive=val_college_PR,college_public=val_college_PU)
-comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,title="Comparaison des PCS entre le collège prive et public")
+comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,main="Répartition de l'origine sociale des élèves dans les collèges publics et privés entre 2014 et 2021")
 
 
 # Taux de réussite DNB selon le secteur (etablissement)
@@ -356,14 +356,10 @@ commg_reussite_bac_PCS <- HTML("En dernier lieu, nous avons décidé de prendre 
 
 # Privé ou public ?
 # Table reussite DNB selon le secteur privé / public 
-
-
-
-# Courbes classes sociales au college prive / public
-commg_reussite_secteur <- HTML("Cette courbe nous permet de visualiser les disparités entre les pays dans le domaine de l'éducation entre 2014 et 2020. 
-                          Ce graphique est interactif puisque l'utilisateur choisit un pays pour afficher le graphique souhaité.
-                          Le nombre d'enseignants par élèves est un facteur très important dans l'apprentissage des élèves puisque les professeurs peuvent accorder plus de temps et d'aides aux élèves dans le besoin lorsque les classes sont à effectifs plus faibles.")
-
+commg_reussite_secteur <- HTML("Ce tableau assez simple nous montre les différences de réussite entre les collèges publics et privés lors du DNB.
+                               En effet, la réussite des élèves scolarisés dans un établissement privé est supérieur au public.
+                               Nous avons choisi de faire une moyenne entre 2017 et 2020 sur la réussite des élèves dans les différents départements de France.
+                               ces deux résultats ne sont donc pas exhaustifs mais présentent une différence d'environ 10 points de pourcentage sur la réussite des élèves.")
 
 commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartition assez contrastée entre les collèges privés et publics.
                               Au sein des collèges privés, les classes sociales très favorisées sont majoritaires alors que les classes sociales défavorisées sont dominantes dans les collèges publics.
@@ -371,9 +367,18 @@ commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartit
                               Ces constats nous invitent à nous poser la question sur l'impact du choix du secteur sur la réussite au DNB mais aussi aux autres diplômes.
                               ")
 
+# Inégalités territoriales 
+HTML("Cette courbe nous permet de visualiser les disparités entre les pays dans le domaine de l'éducation entre 2014 et 2020. 
+                          Ce graphique est interactif puisque l'utilisateur choisit un pays pour afficher le graphique souhaité.
+                          Le nombre d'enseignants par élèves est un facteur très important dans l'apprentissage des élèves puisque les professeurs peuvent accorder plus de temps et d'aides aux élèves dans le besoin lorsque les classes sont à effectifs plus faibles.")
+
+
 
 # Carte taux de réussite DNB par département
 commg_carte_reussite_DNB <- HTML("Ensuite, la carte du taux de réussite au Diplôme National du Brevet selon l'année nous a paru être un graphique pertinent à analyser.")
+
+
+
 
 global_comparaison_evol_enseignant_eleves <- HTML("Ces deux graphiques permettent la comparaison entre deux pays.")
 
