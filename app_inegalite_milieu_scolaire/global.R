@@ -91,8 +91,6 @@ fr_rb_filtre <- import_fr_rb|>
   dplyr::filter(Origine_sociale!="Professions intermediaires : instituteurs et assimiles") |> 
   dplyr::filter(Origine_sociale!="Cadres, professions intellectuelles superieures : professeurs et assimiles") |> 
   dplyr::filter(Origine_sociale!="Ensemble")
-  
-  
 
 fr_reussite_bac <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
 
