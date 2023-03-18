@@ -265,8 +265,6 @@ taux_reussite_secteur
 dpt <- sf::read_sf("data/dpt")
 # Jointure entre dpt et fr_dnb_etablissement pour récupérer les multipolygons associés aux dpt
 dpt2 <- merge(x=fr_dnb_etablissement,y=dpt,by.x="Libellé_département",by.y="NOM_DEPT")
-dpt2
-# VOIR AVEC INNER JOIN
 dpt3 <- dpt2 |>
   select(Session,`Code département`,Inscrits,Admis,geometry) |>
   mutate(reussite = Admis/Inscrits*100)
