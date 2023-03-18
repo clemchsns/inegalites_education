@@ -190,13 +190,74 @@ shinyUI(
                                              plotOutput("evol_enseignant_eleves_2"),
                                              type = 1)
                                        )
+                                     ),
+                                     box(title = "Carte du nombre d'élèves",status = "primary",width ="50000px",solidheader = TRUE,
+                                         radioButtons(inputId="annee_carte",label = "Choisissez une année :",choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
+                                         fluidRow(style="margin:6px;")
+                                         # plotOutput("carte_evol_enseignant")
                                      )
+                            ), # ferme tabPanel
+                            tabPanel("Taux de réussite DNB par département",
+                                     fluidRow(style="margin:6px;",
+                                              radioButtons(inputId="annee_geo",label = "Choisissez une année",inline = TRUE,choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
+                                              withSpinner(
+                                                plotOutput("carte_reussite_DNB"),
+                                                type = 1))
+                            ),
+                            tabPanel("PCS majoritaire par département",
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                leafletOutput("map_pcs_dpt"),
+                                                type = 1)
+                                     )
+                            ),
+                            
+                            tabPanel("Taux de scolarisation en France",
+                                     fluidRow(style="margin:6px;",
+                                              h2("Taux de scolarisation selon les régions en France"),
+                                              box(status = "primary",width ="50000px",solidheader = TRUE, 
+                                                  withSpinner(
+                                                    plotOutput("taux_scolarisation_FR"),
+                                                    type = 1))
+                                     )
+                            ),
+                            
+                            tabPanel("Etudiants en mobilité internationale",
+                                     selectizeInput("Pays_mobilite",label="Pays",
+                                                    choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
+                                                                   "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
+                                                                   "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")),
+                                     withSpinner(
+                                       # plotOutput("mobilite"),
+                                       amChartsOutput("mobilite"),
+                                       type = 1)
                             )
+                            
                           )
                         )
                         ), # ferme le tabItem géo 
-                tabItem("genre"),
-                tabItem("BDD"))
+        tabItem(tabName = "genre",
+                fluidPage(
+                  tabsetPanel(
+                    tabPanel("Répartition des bacs",
+                             fluidRow(style='margin:6px;'),
+                             box(title = "Répartition des baccalauréats selon le genre des élèves",status = "primary",width ="50000px",solidheader = TRUE, 
+                                 withSpinner(
+                                   plotOutput("repartition_bac"),
+                                   type = 1))
+                    )
+                  )
+                )
+                
+        ), # ferme tabItem genre
+        tabItem(tabName = "BDD",
+                fluidPage(
+                  selectizeInput(inputId = "affichage_table", label = "Choisissez une table à afficher",
+                                 choices = names(liste_df)),
+                  dataTableOutput("table")
+                )
+        )
+        )
       )
   ) # ferme le dashboarpage
 ) #ferme le ui

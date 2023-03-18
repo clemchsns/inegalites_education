@@ -5,6 +5,14 @@ library(tidyverse)
 library(treemap)
 library(shinycssloaders) # pour le withspinner
 library(rAmCharts)
+library(sf)
+library(leaflet)
+library(DT)
+library(rmapshaper)
+library(rnaturalearthdata)
+library(rnaturalearth)
+library(BH)
+library(shinyWidgets)
 
 # -- Importation --
 
@@ -52,32 +60,32 @@ summary(fr_indicateur_segreg_college)
 # Taux de scolarisation
 
 import_ts<- read.csv("data/Taux_scolarisation_petite_enfance.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
-ts_reduit <- bind_cols(import_ts[,c(1,6:7)])
-summary(ts_reduit)
+taux_scolarisation <- bind_cols(import_ts[,c(1,6:7)])
+summary(taux_scolarisation)
 
 # Etudiant en mobilité internationale
 import_em <- read.csv("data/Pct_etudiants_en_mobilite.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
 em_reduit <- bind_cols(import_em[,c(1,6:7)])
 colnames(em_reduit) <- c("LOCATION","TIME","VALUE")
-em_filtre <- em_reduit |> 
+etud_mobilite <- em_reduit |> 
   dplyr::filter(TIME>=2014,TIME<=2021)
-levels(em_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
+levels(etud_mobilite$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                 "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
                                 "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
 
-summary(em_filtre)
+summary(etud_mobilite)
 
 # France : Taux des scolarisations par département
-importfr_ts_dpt <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=1)
-importfr_ts_dpt[,c("Numéro département","Libellé département")] <- lapply(importfr_ts_dpt[,c("Numéro département","Libellé département")],factor)
-summary(importfr_ts_dpt)
+fr_taux_scolarisation_dpt <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=1)
+fr_taux_scolarisation_dpt[,c("Numéro département","Libellé département")] <- lapply(fr_taux_scolarisation_dpt[,c("Numéro département","Libellé département")],factor)
+summary(fr_taux_scolarisation_dpt)
 
 #France : Taux des scolarisations par région
-importfr_ts_rg <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=2)
-importfr_ts_rg$Numero <- factor(importfr_ts_rg$Numero)
-importfr_ts_rg$Region <- factor(importfr_ts_rg$Region)
+fr_taux_scolarisation_reg <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=2)
+fr_taux_scolarisation_reg$Numero <- factor(fr_taux_scolarisation_reg$Numero)
+fr_taux_scolarisation_reg$Region <- factor(fr_taux_scolarisation_reg$Region)
 
-summary(importfr_ts_rg)
+summary(fr_taux_scolarisation_reg)
 
 # France : réussite bac 
 
@@ -113,9 +121,9 @@ importfr_boursiers_dpt <- read.csv("data/Fr-boursiers-par-departement.csv",sep="
 colnames(importfr_boursiers_dpt) <- c("Rentrée scolaire","Libellé formation","X_Type étab",
                                       "Secteur","Numéro département","Libellé département",
                                       "Nb boursiers", "Commentaire_Nb boursiers","Nb dernier échelon","Commentaire_Nb dernier échelon")
-fr_boursiers_dpt_reduit <- importfr_boursiers_dpt[,c(1,4:7)]
-fr_boursiers_dpt_reduit[,c(2:4)] <- lapply(fr_boursiers_dpt_reduit[,c(2:4)],factor)
-summary(fr_boursiers_dpt_reduit)
+fr_boursiers_dpt <- importfr_boursiers_dpt[,c(1,4:7)]
+fr_boursiers_dpt[,c(2:4)] <- lapply(fr_boursiers_dpt[,c(2:4)],factor)
+summary(fr_boursiers_dpt)
 
 
 # France : Bac par académie
@@ -126,11 +134,23 @@ colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du c
                                      "Nombre d admis à l issue du 2nd groupe","Nombre de refusés à l issue du 2nd groupe","Nombre d admis totaux",
                                      "Nombre d admis avec mention TB avec les félicitations du jury","Nombre d admis avec mention TB sans les félicitations du jury",
                                      "Nombre d admis avec mention B","Nombre d admis avec mention AB","Nombre d admis sans mention","Nombre de refusés totaux")
-fr_bac_academie_reduit <- importfr_bac_academie[,c(1,3,5,8:21)]
-fr_bac_academie_reduit[,c(2:3)] <- lapply(fr_bac_academie_reduit[,c(2:3)],factor)
-summary(fr_bac_academie_reduit)
+fr_bac_academie <- importfr_bac_academie[,c(1,3,5,8:21)]
+fr_bac_academie[,c(2:3)] <- lapply(fr_bac_academie[,c(2:3)],factor)
+summary(fr_bac_academie)
 
 
+
+liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
+                "OCDE : Taux d'obtention d'un diplôme"=tod_filtre,
+                "France : Indicateur de ségrégation sociale"=fr_indicateur_segreg_college,
+                "OCDE : Taux de scolarisation "=taux_scolarisation,
+                "OCDE : Etudiants en mobilité internationale"=etud_mobilite,
+                "France : Taux de scolarisation par département"=fr_taux_scolarisation_dpt,
+                "France : Taux de scolarisation par région"=fr_taux_scolarisation_reg,
+                'France : Réussite par baccalauréat'=fr_reussite_bac,
+                "France : Obtention du brevet par établissement"=fr_dnb_etablissement,
+                "France : Nombre de boursiers par établissement"=fr_boursiers_dpt,
+                "France : Obtention du baccalauréat par académie"=fr_bac_academie)
 
 ### Acceuil --- 
 # Value-box
@@ -243,3 +263,85 @@ val_college_PR <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PR),
 df_comparaison_pcs_PU_PR <- data.frame(PCS, college_prive=val_college_PR,college_public=val_college_PU)
 comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,title="Comparaison des PCS entre le collège prive et public")
 
+
+
+
+
+### Inégalité territoriale
+
+# ---- Carte : Taux de réussite DNB par département -----
+dpt <- sf::read_sf("data/dpt")
+# Jointure entre dpt et fr_dnb_etablissement pour récupérer les multipolygons associés aux dpt
+dpt2 <- merge(x=fr_dnb_etablissement,y=dpt,by.x="Libellé_département",by.y="NOM_DEPT")
+dpt2
+# VOIR AVEC INNER JOIN
+dpt3 <- dpt2 |>
+  select(Session,`Code département`,Inscrits,Admis,geometry) |>
+  mutate(reussite = Admis/Inscrits*100)
+
+
+# ---- Carte : PCS majoritaire selon le département ------
+# fichier fr_segregation_sociale
+# colone proportiontfav, proportion_fav, proportion_fav et proportion_defav
+# Essai avec une seule année (pas de choix année)
+# pour chaque dpt :
+# max entre proportiontfav proportion_fav proportion_fav proportion_defav
+# représenter 
+# Carte interactive leaflet
+dpt_pcs_maj <- merge(x=fr_indicateur_segreg_college,y=dpt, by.x = "nom_dep", by.y = "NOM_DEPT")
+
+dpt_pcs_maj2 <- dpt_pcs_maj |> 
+  select(nom_dep,annee,proportion_tfav,proportion_fav,proportion_moy, proportion_defav,geometry) |> 
+  group_by(nom_dep,annee) |> 
+  pivot_longer(cols=c(proportion_tfav,proportion_fav,proportion_moy, proportion_defav),
+               names_to = "Classe_sociale",
+               values_to = "Valeur") |> 
+  filter(Valeur == max(Valeur, na.rm=TRUE))
+
+carte_pcs <- leaflet() |> 
+  addTiles() |> 
+  setView(lat = 46.2276, lng = 2.2137, zoom = 5)
+
+
+# Carte Taux de scolarisation en france
+regions <- read_sf("data/regions-20180101-shp/")
+regions1 <- ms_simplify(regions)
+regions2 <- merge(x=regions1,y=fr_taux_scolarisation_reg,by.x="code_insee",by.y = "Numero")
+format(object.size(regions2),units="Mb")
+
+carte_tx_scolarisation <- ggplot(regions2)+geom_sf()+
+  geom_sf(aes(fill=`Total premier degre`))+
+  coord_sf(xlim = c(-5.5,10),ylim=c(41,51))+
+  scale_fill_continuous(low="yellow",high="red")+
+  labs(title = "Taux de scolarisation (en maternelle et primaire) en France")+
+  theme_void()
+
+
+# Voies professionnelles des élèves
+df_voies <- data.frame(Sexe=fr_bac_academie$Sexe,Voie=fr_bac_academie$Voie)
+table(df_voies)
+df <- data.frame(
+  Sexe=c("Filles","Garcons"),
+  Bac_General = c(89,89),
+  Bac_Professionnel = c(2847,3894),
+  Bac_Technologique = c(714,774)
+)
+
+df_voies_professionnelles <- df |> pivot_longer(cols=c(Bac_General, Bac_Professionnel,Bac_Technologique),
+                          names_to = "Bac",
+                          values_to = "Valeur")
+voies <- ggplot(df_voies_professionnelles) +
+  aes(x=Sexe, y=Valeur, fill=Bac) +
+  geom_bar(stat="identity", position = "dodge")+
+  labs(x="Sexe",y="Nombre d'eleves",title="Nombre d'eleves selon la voie professionnelle en 2021")+
+  scale_fill_brewer(palette="Blues")+
+  theme(plot.title = element_text(hjust = 0.45))
+
+
+# Commentaires graphiques ---
+
+# Reussite bac selon PCS selon secteur au college
+commg_amchartComparaisonPCS <- HTML("Ce graphique nous permet de distinguer la répartition des PCS selon le secteur d'enseignement.
+Nous pouvons directement nous rendre compte des disparités sociales entre les collèges puisque la classe sociale majoritaire dans les collèges publics est défavorisée alors que dans ceux privés, elle correspond à une classe aisée.")
+
+global_comparaison_evol_enseignant_eleves <- HTML("Ces deux graphiques permettent la comparaison entre deux pays.")

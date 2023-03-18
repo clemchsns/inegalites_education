@@ -5,9 +5,9 @@ account: clemchsns
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8595441
-bundleId: 6976099
+bundleId: 6976320
 url: https://clemchsns.shinyapps.io/app_inegalite_milieu_scolaire/
-when: 1679158345.31162
-lastSyncTime: 1679158345.31163
+when: 1679163287.86359
+lastSyncTime: 1679163287.86361
 asMultiple: FALSE
 asStatic: FALSE
