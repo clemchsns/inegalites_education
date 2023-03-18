@@ -74,7 +74,7 @@ shinyUI(
                   tabPanel("Personnages importants (dans les pays de l'OCDE)",
                            fluidRow(style='margin:6px;'),
                            fluidRow(
-                             box(title="En France",h1("Jules FERRY"),imageOutput("Jules_FERRY"),status = "primary"),
+                             box(title="En France",h1("Jules FERRY"),HTML("Il était ministre de l'instruction Publique en 1879.\n Il a permis la gratuité de l'enseignement public"),imageOutput("Jules_FERRY"),status = "primary"),
                              box(title="En Allemagne",h1("Martin LUTHER"),imageOutput("Martin_LUTHER"),status="success")
                            ), # ferme le fluidRow
                            fluidRow(

@@ -57,11 +57,6 @@ colnames(fr_indicateur_segreg_college) <- c("annee","nom_academie","dep","nom_de
 fr_indicateur_segreg_college$nom_dep <- as.factor(fr_indicateur_segreg_college$nom_dep)
 summary(fr_indicateur_segreg_college)
 
-# Taux de scolarisation
-
-import_ts<- read.csv("data/Taux_scolarisation_petite_enfance.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
-taux_scolarisation <- bind_cols(import_ts[,c(1,6:7)])
-summary(taux_scolarisation)
 
 # Etudiant en mobilité internationale
 import_em <- read.csv("data/Pct_etudiants_en_mobilite.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
@@ -75,10 +70,6 @@ levels(etud_mobilite$LOCATION) <- c("Australie","Autriche","Belgique","Brésil",
 
 summary(etud_mobilite)
 
-# France : Taux des scolarisations par département
-fr_taux_scolarisation_dpt <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=1)
-fr_taux_scolarisation_dpt[,c("Numéro département","Libellé département")] <- lapply(fr_taux_scolarisation_dpt[,c("Numéro département","Libellé département")],factor)
-summary(fr_taux_scolarisation_dpt)
 
 #France : Taux des scolarisations par région
 fr_taux_scolarisation_reg <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=2)
