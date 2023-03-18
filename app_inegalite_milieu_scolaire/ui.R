@@ -74,20 +74,27 @@ shinyUI(
                   tabPanel("Personnages importants (dans les pays de l'OCDE)",
                            fluidRow(style='margin:6px;'),
                            fluidRow(
-                             box(title="En France",h1("Jules FERRY"),HTML("Il était ministre de l'instruction Publique en 1879.\n Il a permis la gratuité de l'enseignement public"),imageOutput("Jules_FERRY"),status = "primary"),
-                             box(title="En Allemagne",h1("Martin LUTHER"),imageOutput("Martin_LUTHER"),status="success")
+                             box(title="En France",h1("Jules FERRY"),HTML("Il était ministre de l'instruction Publique en 1879.\n Il a permis la gratuité de l'enseignement public"),fluidRow(style="margin:6px;"),imageOutput("Jules_FERRY"),status = "primary"),
+                             box(title="En Allemagne",h1("Martin LUTHER"),HTML("Martin Luther a grandement contribué à l'éducation en Allemagne en promouvant l'enseignement primaire et en créant des écoles pour tous les enfants, surtout les filles"),fluidRow(style="margin:6px;"),imageOutput("Martin_LUTHER"),status="success")
                            ), # ferme le fluidRow
                            fluidRow(
-                             box(title ="En Espagne",h1("Francisco Giner de los Ríos"),imageOutput("Francisco_Giner_de_los_Ríos"),status="warning"),
-                             box(title= "En Turquie", h1("Mustafa Kemal Atatürk"),imageOutput("Mustafa_Kemal_Atatürk"),status = "info")
+                             box(title ="En Espagne",h1("Francisco Giner de los Ríos"),HTML("Francisco Giner de los Ríos était un pédagogue et intellectuel espagnol du XIXe siècle, connu pour être le fondateur de l'Institution Libre d'Enseignement (ILE), une institution éducative novatrice qui a eu une grande influence sur l'éducation en Espagne."),
+                                 fluidRow(style="margin:6px;"),imageOutput("Francisco_Giner_de_los_Ríos"),status="warning"),
+                             box(title= "En Turquie", h1("Mustafa Kemal Atatürk"),HTML("Mustafa Kemal Atatürk était un dirigeant politique turc qui a joué un rôle crucial dans la fondation de la République de Turquie en 1923. 
+                                                                                       Il a dirigé le pays pendant près de 20 ans en tant que président et a permis de nombreux avancement dans de nombreux domaines, notamment l'éducation, l'économie, la politique et la culture."),
+                                 fluidRow(style="margin:6px;"),imageOutput("Mustafa_Kemal_Atatürk"),status = "info")
                            ),
                            fluidRow(
-                             box(title = "Au Japon", h1("Deux principaux acteurs :"), h2("Gouvernement Japonais"),h2("Mori Arinori"),imageOutput("Mori_Arinori"),status = "danger"),
+                             box(title = "Au Japon", HTML("<u>Deux principaux acteurs :</u>"), h2("Gouvernement Japonais"),HTML("Le gouvernement japonais a fait de l'éducation une priorité nationale et a mis en place un système éducatif solide pour les générations futures."),h2("Mori Arinori"),HTML("Mori Arinori a été l'un des premiers réformateurs de l'éducation sous le gouvernement Meiji. 
+                                                                                                                                                                                                                                                                                                   Il a mis en place des réformes éducatives majeures, notamment la mise en place d'un système d'éducation nationale obligatoire pour tous les enfants, l'expansion de l'éducation pour les filles et la création de nombreuses écoles professionnelles. 
+                                                                                                                                                                                                                                                                                                   Il a également joué un rôle clé dans la création de l'Université impériale de Tokyo, l'une des premières universités de recherche modernes du Japon."),
+                                 fluidRow(style="margin:6px;"),
+                                 imageOutput("Mori_Arinori"),status = "danger"),
                              box(title = "Au Canada",p("L'éducation au Canada est gérée au niveau provincial et territorial plutôt qu'au niveau fédéral. Cela signifie que chaque province et territoire a mis en place son propre système d'éducation, et que l'histoire et l'évolution de l'éducation nationale varient d'une région à l'autre."))
                            )
                            ) # ferme le tabPanel Personnages importants
                   ) # ferme le tabSetPanel
-                ), # ferme le tabItem Acceuil
+                ), # ferme le tabItem Accueil
                 
                 tabItem("social",
                         sidebarLayout(
@@ -159,7 +166,7 @@ shinyUI(
                           )
                         ) # ferme le mainPanel
                         ) # ferme le sidebarLayout
-                        ), # ferme le tabItem Acceuil
+                        ), # ferme le tabItem Accueil
         
         ### Inégalités territoriales
                 tabItem("geo",
