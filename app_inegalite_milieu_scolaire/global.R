@@ -88,10 +88,17 @@ colnames(import_fr_rb) <- c("Annee","Origine_sociale","Nombre d'admis au baccala
 import_fr_rb$Origine_sociale <- factor(import_fr_rb$Origine_sociale)
 fr_rb_filtre <- import_fr_rb|> 
   dplyr::filter(Annee>=2014,Annee<=2021) |> 
-  dplyr::filter(Origine_sociale!="Professions intermediaires : instituteurs et assimiles")
+  dplyr::filter(Origine_sociale!="Professions intermediaires : instituteurs et assimiles") |> 
+  dplyr::filter(Origine_sociale!="Cadres, professions intellectuelles superieures : professeurs et assimiles") |> 
+  dplyr::filter(Origine_sociale!="Ensemble")
 
 fr_reussite_bac <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
+
 summary(fr_reussite_bac)
+
+
+
+
 
 # France : Brevet par établissement
 importfr_dnb <- read.csv("data/Fr-dnb-par-etablissement.csv",sep=";",header=TRUE)
@@ -134,16 +141,14 @@ summary(fr_bac_academie)
 liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
                 "OCDE : Taux d'obtention d'un diplôme"=tod_filtre,
                 "France : Indicateur de ségrégation sociale"=fr_indicateur_segreg_college,
-                "OCDE : Taux de scolarisation "=taux_scolarisation,
                 "OCDE : Etudiants en mobilité internationale"=etud_mobilite,
-                "France : Taux de scolarisation par département"=fr_taux_scolarisation_dpt,
                 "France : Taux de scolarisation par région"=fr_taux_scolarisation_reg,
                 'France : Réussite par baccalauréat'=fr_reussite_bac,
                 "France : Obtention du brevet par établissement"=fr_dnb_etablissement,
                 "France : Nombre de boursiers par établissement"=fr_boursiers_dpt,
                 "France : Obtention du baccalauréat par académie"=fr_bac_academie)
 
-### Acceuil --- 
+### Accueil --- 
 # Value-box
 
 education_nationale <- valueBox(
@@ -201,9 +206,7 @@ Creations_bacs_pros <- valueBox(
 
 ### Inégalités socio-économiques
 
-# value-box
-
-# Moyenne du pct d'admis au baccalauréat selon la PCS 
+# Values-box : Moyenne du pct d'admis au baccalauréat selon la PCS 
 df_PCS <- data.frame(
   value = aggregate(`Pourcentage d'admis au baccalaureat`~ Origine_sociale,data=fr_reussite_bac,mean)
 )
@@ -223,6 +226,21 @@ baccalaureat <- round(sum(df_PCS$Pct_admis_baccalaureat)/nrow(df_PCS))
 baccalaureat
 
 
+# Comparaison des PCS entre le college prive et public
+PCS <- c("Tres favorise","favorise","moyenne","defavorise")
+val_college_PU <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PU),
+                    mean(fr_indicateur_segreg_college$proportion_fav_PU),
+                    mean(fr_indicateur_segreg_college$proportion_moy_PU),
+                    mean(fr_indicateur_segreg_college$proportion_defav_PU))
+val_college_PR <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PR),
+                    mean(fr_indicateur_segreg_college$proportion_fav_PR),
+                    mean(fr_indicateur_segreg_college$proportion_moy_PR),
+                    mean(fr_indicateur_segreg_college$proportion_defav_PR))
+
+df_comparaison_pcs_PU_PR <- data.frame(PCS, college_prive=val_college_PR,college_public=val_college_PU)
+comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,title="Comparaison des PCS entre le collège prive et public")
+
+
 # Taux de réussite DNB selon le secteur (etablissement)
 taux_reussite_public <- fr_dnb_etablissement |> 
   select(`Secteur d'enseignement`,Admis,Inscrits) |> 
@@ -240,25 +258,8 @@ taux_reussite_secteur <- cbind(taux_reussite_prive,taux_reussite_public)
 taux_reussite_secteur
 
 
-# Comparaison des PCS entre le college prive et public
-PCS <- c("Tres favorise","favorise","moyenne","defavorise")
-val_college_PU <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PU),
-                    mean(fr_indicateur_segreg_college$proportion_fav_PU),
-                    mean(fr_indicateur_segreg_college$proportion_moy_PU),
-                    mean(fr_indicateur_segreg_college$proportion_defav_PU))
-val_college_PR <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PR),
-                    mean(fr_indicateur_segreg_college$proportion_fav_PR),
-                    mean(fr_indicateur_segreg_college$proportion_moy_PR),
-                    mean(fr_indicateur_segreg_college$proportion_defav_PR))
 
-df_comparaison_pcs_PU_PR <- data.frame(PCS, college_prive=val_college_PR,college_public=val_college_PU)
-comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,title="Comparaison des PCS entre le collège prive et public")
-
-
-
-
-
-### Inégalité territoriale
+### Inégalités territoriales
 
 # ---- Carte : Taux de réussite DNB par département -----
 dpt <- sf::read_sf("data/dpt")
@@ -331,8 +332,85 @@ voies <- ggplot(df_voies_professionnelles) +
 
 # Commentaires graphiques ---
 
-# Reussite bac selon PCS selon secteur au college
-commg_amchartComparaisonPCS <- HTML("Ce graphique nous permet de distinguer la répartition des PCS selon le secteur d'enseignement.
-Nous pouvons directement nous rendre compte des disparités sociales entre les collèges puisque la classe sociale majoritaire dans les collèges publics est défavorisée alors que dans ceux privés, elle correspond à une classe aisée.")
+# PCS
+# Présentation onglet socio-économique : 
+comm_onglet_socio_economique <- HTML("Dans cet onglet, nous pouvons analyser les disparités entre les élèves dues à leur origine sociale ou aux choix de leurs parents. 
+Nous avons choisi de diviser en deux sous-onglets car l'origine sociale n'est pas nécessairement liée aux choix d'un enseignement public ou privé.")
+
+# Répartition PCS au collège
+commg_treemap_college <- HTML("Premièrement, nous pouvons observer la répartition des classes sociales au collège en France.
+Ce graphique est interactif car il dépend de l'année et du département choisi.
+Par exemple, des départements assez pauvres comme la Seine Saint-Denis ou encore la Réunion, présentent une proportion majoritaire d'enfants provenant de classes sociales défavorisées. En effet, cette treemap représente environ 50% de cette catégorie, et ce, quelques soient les années.
+A contrario, les départements plus riches comme Paris, les Hauts-de-Seine ou encore les Yvelines expose un tout autre point de vue. Dans ce cas, environ 50% des collégiens sont issues de classes sociales aisées. 
+Cette représentation graphique est très pertinente puisqu'elle permet d'analyser les contrastes au collège, selon le département.")
+
+# Répartition PCS au lycée : A FINIR
+commg_camembert_lycee <- HTML("Deuxièmement, ce diagramme circulaire est lui aussi intéressant puisqu'il permet d'avoir une vision d'ensemble des Professions et Catégories Sociales des parents d'élèves au lycée. 
+                              Nous avons décidé de réaliser un graphique statique en faisant une moyenne des données disponibles entre 2014 et 2021. 
+                              Ce choix nous a permis de simplifier nos manipulations car certaines années étaient incomplètes.")
+
+# Evolution réussite différents bacs selon PCS des parents : A FINIR
+commg_reussite_bac_PCS <- HTML("En dernier lieu, nous avons décidé de prendre en compte la dimension temporelle des données. 
+                                C'est pourquoi, ce graphique décrit l'évolution du taux de réussite au baccalauréat entre 2014 et 2020. 
+                                L'utilisateur doit choisir une Profession ou Catégorie Sociale afin de visualiser le pourcentage d'admis selon chaque type de baccalauréat.") 
+
+# Privé ou public ?
+# Table reussite DNB selon le secteur privé / public 
+
+
+
+# Courbes classes sociales au college prive / public
+commg_reussite_secteur <- HTML("Cette courbe nous permet de visualiser les disparités entre les pays dans le domaine de l'éducation entre 2014 et 2020. 
+                          Ce graphique est interactif puisque l'utilisateur choisit un pays pour afficher le graphique souhaité.
+                          Le nombre d'enseignants par élèves est un facteur très important dans l'apprentissage des élèves puisque les professeurs peuvent accorder plus de temps et d'aides aux élèves dans le besoin lorsque les classes sont à effectifs plus faibles.")
+
+
+commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartition assez contrastée entre les collèges privés et publics.
+                              Au sein des collèges privés, les classes sociales très favorisées sont majoritaires alors que les classes sociales défavorisées sont dominantes dans les collèges publics.
+                              Cette différence peut s'expliquer par les frais de scolarité plus élevés dans les collèges privés.
+                              Ces constats nous invitent à nous poser la question sur l'impact du choix du secteur sur la réussite au DNB mais aussi aux autres diplômes.
+                              ")
+
+
+# Carte taux de réussite DNB par département
+commg_carte_reussite_DNB <- HTML("Ensuite, la carte du taux de réussite au Diplôme National du Brevet selon l'année nous a paru être un graphique pertinent à analyser.")
 
 global_comparaison_evol_enseignant_eleves <- HTML("Ces deux graphiques permettent la comparaison entre deux pays.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
