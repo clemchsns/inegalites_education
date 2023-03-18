@@ -99,17 +99,11 @@ shinyUI(
                 tabItem("social",
                         sidebarLayout(
                           sidebarPanel(
-                            selectizeInput("nom_departement",label="Choisissez un département :",
-                                           choices=list("AIN","AISNE","ALLIER","ALPES-DE-HTE-PROVENCE","ALPES-MARITIMES","ARDECHE","ARDENNES","ARIEGE","AUBE","AUDE","AVEYRON","BAS-RHIN","BOUCHES-DU-RHONE","CALVADOS","CANTAL","CHARENTE","CHARENTE-MARITIME",
-                                                        "CHER","CORREZE","CORSE-DU-SUD", "COTE D'OR","COTES D'ARMOR","CREUSE","DEUX-SEVRES","DORDOGNE","DOUBS","DROME","Ensemble de l'acadÃ©mie","ESSONNE",
-                                                        "EURE","EURE-ET-LOIR","FINISTERE","GARD","GERS" ,"GIRONDE","GUADELOUPE","GUYANE","HAUT-RHIN","HAUTE-CORSE" ,"HAUTE-GARONNE","HAUTE-LOIRE","HAUTE-MARNE","HAUTE-SAONE","HAUTE-VIENNE","HAUTE SAVOIE","HAUTES-ALPES","HAUTES-PYRENEES","HAUTS-DE-SEINE","HERAULT","ILLE-ET-VILAINE" ,"INDRE","INDRE-ET-LOIRE","ISERE","JURA","LA REUNION","LANDES","LOIR-ET-CHER","LOIRE","LOIRE-ATLANTIQUE","LOIRET","LOT","LOT-ET-GARONNE","LOZERE","MAINE-ET-LOIRE","MANCHE","MARNE","MARTINIQUE", "MAYENNE","MAYOTTE","MEURTHE-ET-MOSELLE","MEUSE","MORBIHAN","MOSELLE","NIEVRE","NORD","OISE","ORNE","PARIS","PAS-DE-CALAIS","PUY-DE-DOME","PYRENEES-ATLANTIQUES","PYRENEES-ORIENTALES","RHONE","SAONE-ET-LOIRE","SARTHE","SAVOIE","SEINE-ET-MARNE","SEINE-SAINT-DENIS","SEINE MARITIME","SOMME","TARN","TARN-ET-GARONNE","TERRITOIRE DE BELFORT","VAL-D'OISE","VAL-DE-MARNE","VAR","VAUCLUSE","VENDEE","VIENNE","VOSGES","YONNE","YVELINES")
-                            ),
                             radioButtons(inputId="annee",label = "Choisissez une année :",choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
                             selectizeInput("origine_sociale",label="Origine Sociale",
                                            choices = list("Agriculteurs exploitants","Artisans, commerçants, chefs d'entreprise","Autres personnes sans activité professionnelle",
                                                           "Cadres, professions intellectuelles supérieures","Cadres, professions intellectuelles supérieures : professeurs et assimilés",
-                                                          "dont instituteurs et assimilés","dont professeurs et assimilés","Employés","Ensemble","Indéterminé","Ouvriers",
-                                                          "Professions intermédiaires","Professions intermédiaires : instituteurs et assimilés","Retraités")),
+                                                          "Employés","Indéterminé","Ouvriers","Professions intermédiaires","Retraités")),
                             width = 3
                           ),
                         mainPanel(
@@ -123,6 +117,11 @@ shinyUI(
                                        valueBoxOutput("bac_origine_sociale") ,
                                        valueBoxOutput("bac_sans_emploi") ,
                                        valueBoxOutput("bac_cadre")
+                                     ),
+                                     selectizeInput("nom_departement",label="Choisissez un département :",
+                                                    choices=list("AIN","AISNE","ALLIER","ALPES-DE-HTE-PROVENCE","ALPES-MARITIMES","ARDECHE","ARDENNES","ARIEGE","AUBE","AUDE","AVEYRON","BAS-RHIN","BOUCHES-DU-RHONE","CALVADOS","CANTAL","CHARENTE","CHARENTE-MARITIME",
+                                                                 "CHER","CORREZE","CORSE-DU-SUD", "COTE D'OR","COTES D'ARMOR","CREUSE","DEUX-SEVRES","DORDOGNE","DOUBS","DROME","Ensemble de l'acadÃ©mie","ESSONNE",
+                                                                 "EURE","EURE-ET-LOIR","FINISTERE","GARD","GERS" ,"GIRONDE","GUADELOUPE","GUYANE","HAUT-RHIN","HAUTE-CORSE" ,"HAUTE-GARONNE","HAUTE-LOIRE","HAUTE-MARNE","HAUTE-SAONE","HAUTE-VIENNE","HAUTE SAVOIE","HAUTES-ALPES","HAUTES-PYRENEES","HAUTS-DE-SEINE","HERAULT","ILLE-ET-VILAINE" ,"INDRE","INDRE-ET-LOIRE","ISERE","JURA","LA REUNION","LANDES","LOIR-ET-CHER","LOIRE","LOIRE-ATLANTIQUE","LOIRET","LOT","LOT-ET-GARONNE","LOZERE","MAINE-ET-LOIRE","MANCHE","MARNE","MARTINIQUE", "MAYENNE","MAYOTTE","MEURTHE-ET-MOSELLE","MEUSE","MORBIHAN","MOSELLE","NIEVRE","NORD","OISE","ORNE","PARIS","PAS-DE-CALAIS","PUY-DE-DOME","PYRENEES-ATLANTIQUES","PYRENEES-ORIENTALES","RHONE","SAONE-ET-LOIRE","SARTHE","SAVOIE","SEINE-ET-MARNE","SEINE-SAINT-DENIS","SEINE MARITIME","SOMME","TARN","TARN-ET-GARONNE","TERRITOIRE DE BELFORT","VAL-D'OISE","VAL-DE-MARNE","VAR","VAUCLUSE","VENDEE","VIENNE","VOSGES","YONNE","YVELINES")
                                      ),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
@@ -174,15 +173,17 @@ shinyUI(
                           titlePanel("Les inégalités territoriales"),
                           tabsetPanel(
                             tabPanel("Condition d'apprentissage", # evolution du nombre d'enseignant par élève et le taux reussite
-                                     fluidRow(
-                                       selectizeInput("Pays_enseignant",label="Pays",
+                                     fluidRow(style='margin:6px;',
+                                              column(width = 6,selectizeInput("Pays_enseignant",label="Pays",
                                                       choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                                                      "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
-                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")),
-                                       selectizeInput("Pays_enseignant2",label="Pays",
+                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
+                                                      )),
+                                              column(width = 6,selectizeInput("Pays_enseignant2",label="Pays",
                                                       choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                                                      "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
-                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA"))
+                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
+                                                      ))
                                        
                                      ),
                                      fluidRow(
