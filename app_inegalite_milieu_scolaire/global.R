@@ -33,8 +33,8 @@ levels(enseignant_par_eleves$LOCATION) <- c("Australie","Autriche","Belgique","B
 
 
 
-# Taux optention diplôme
-import_tod <- read_excel("data/Taux_optention_diplome.xlsx",sheet=1)
+# Taux obtention diplôme
+import_tod <- read_excel("data/Taux_obtention_diplome.xlsx",sheet=1)
 tod_reduit <- import_tod[,c(2,4,6,8:9,12,15)]
 tod_reduit_bis <- na.omit(tod_reduit)
 tod_filtre <- tod_reduit_bis |> 
