@@ -132,7 +132,7 @@ colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du c
                                      "Nombre d admis à l issue du 2nd groupe","Nombre de refusés à l issue du 2nd groupe","Nombre d admis totaux",
                                      "Nombre d admis avec mention TB avec les félicitations du jury","Nombre d admis avec mention TB sans les félicitations du jury",
                                      "Nombre d admis avec mention B","Nombre d admis avec mention AB","Nombre d admis sans mention","Nombre de refusés totaux")
-fr_bac_academie <- importfr_bac_academie[,c(1,3,5,8:21)]
+fr_bac_academie <- importfr_bac_academie[,c(1:3,5,8:21)]
 fr_bac_academie[,c(2:3)] <- lapply(fr_bac_academie[,c(2:3)],factor)
 summary(fr_bac_academie)
 
@@ -299,8 +299,16 @@ regions1 <- ms_simplify(regions)
 regions2 <- merge(x=regions1,y=fr_taux_scolarisation_reg,by.x="code_insee",by.y = "Numero")
 format(object.size(regions2),units="Mb")
 
-carte_tx_scolarisation <- ggplot(regions2)+geom_sf()+
-  geom_sf(aes(fill=`Total premier degre`))+
+nb_eleves_france <- fr_taux_scolarisation_reg |> 
+  filter(Region=="France") |> 
+  select(`Total premier degre`)
+
+
+regions3 <- regions2 |> 
+  mutate(repartition = (`Total premier degre`/nb_eleves_france$`Total premier degre`)*100)
+
+carte_tx_scolarisation <- ggplot(regions3)+geom_sf()+
+  geom_sf(aes(fill=repartition))+
   coord_sf(xlim = c(-5.5,10),ylim=c(41,51))+
   scale_fill_continuous(low="yellow",high="red")+
   labs(title = "Taux de scolarisation (en maternelle et primaire) en France")+
@@ -359,6 +367,7 @@ commg_reussite_secteur <- HTML("Ce tableau assez simple nous montre les différe
                                Nous avons choisi de faire une moyenne entre 2017 et 2020 sur la réussite des élèves dans les différents départements de France.
                                ces deux résultats ne sont donc pas exhaustifs mais présentent une différence d'environ 10 points de pourcentage sur la réussite des élèves.")
 
+# Classes sociales au college prive / public
 commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartition assez contrastée entre les collèges privés et publics.
                               Au sein des collèges privés, les classes sociales très favorisées sont majoritaires alors que les classes sociales défavorisées sont dominantes dans les collèges publics.
                               Cette différence peut s'expliquer par les frais de scolarité plus élevés dans les collèges privés.
@@ -366,19 +375,33 @@ commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartit
                               ")
 
 # Inégalités territoriales 
-HTML("Cette courbe nous permet de visualiser les disparités entre les pays dans le domaine de l'éducation entre 2014 et 2020. 
-                          Ce graphique est interactif puisque l'utilisateur choisit un pays pour afficher le graphique souhaité.
+
+# Présentation onglet inégalités territoriales
+
+
+# Evolution du nombre d'enseignant par élèves
+global_comparaison_evol_enseignant_eleves <- HTML("Ces deux graphiques permettent la comparaison entre deux pays.")
+
+commg_evol_enseignant_eleves <- HTML("Ces courbes nous permettent de visualiser les disparités entre les pays dans le domaine de l'éducation entre 2014 et 2020. 
+                          Ces graphiques sont interactifs puisque l'utilisateur choisit un pays pour afficher les graphiques souhaités. 
+                          Nous avons positionnés ces deux graphiques sur une même ligne afin de pouvoir comparer deux pays. 
+                          Cette mise en page permet d'analyser plus précisement les disparités entre le pays d'habitation des élèves.
                           Le nombre d'enseignants par élèves est un facteur très important dans l'apprentissage des élèves puisque les professeurs peuvent accorder plus de temps et d'aides aux élèves dans le besoin lorsque les classes sont à effectifs plus faibles.")
 
 
-
-# Carte taux de réussite DNB par département
+# Carte taux de réussite DNB par département : A FINIR
 commg_carte_reussite_DNB <- HTML("Ensuite, la carte du taux de réussite au Diplôme National du Brevet selon l'année nous a paru être un graphique pertinent à analyser.")
 
 
+# PCS majoritaire par département
+# commg_carte_reussite_DNB <- HTML("")
 
-
-global_comparaison_evol_enseignant_eleves <- HTML("Ces deux graphiques permettent la comparaison entre deux pays.")
+# Taux de scolarisation selon les régions
+commg_map_pcs_dpt <- HTML("Cette carte de France nous permet de visualiser la répartition des enfants scolarisés selon les régions.
+                          Nous pouvons remarquer que la région concentrant le plus d'élèves en France est l'Ile-de-France et celle avec le moins d'élèves est le Centre-Val-de-Loire.
+                          Ces écarts peuvent impliquer des situations plus ou moins favorables pour l'apprentissage des élèves. 
+                          N.B : Nous aurions voulu observer si chaque région présente un taux de scolarisation important ou non mais les données n'étaient pas disponibles.
+                          ")
 
 
 
