@@ -20,15 +20,13 @@ levels(epe_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Ca
                                  "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
                                  "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
 
-epe_filtre_10 <- epe_filtre[1:10,]
 
 
 # Taux optention diplôme
 import_tod <- read_excel("data/Taux_optention_diplome.xlsx",sheet=1)
 tod_reduit <- import_tod[,c(2,4,6,8:9,12,15)]
 tod_reduit_bis <- na.omit(tod_reduit)
-tod_10l <- tod_reduit_bis[1:10,]
-tod_filtre <- tod_10l |> 
+tod_filtre <- tod_reduit_bis |> 
   dplyr::filter(YEAR>=2014,YEAR<=2021) |> 
   dplyr::filter(Indicateur == "Taux d’obtention d’un diplôme")
 
@@ -46,15 +44,13 @@ colnames(segreg_reduit) <- c("annee","nom_academie","dep","nom_dep",
                              "indice_entropie_total","indice_entropie_PU","indice_entropie_PR",
                              "contrib_college_PU","contrib_college_PR")
 segreg_reduit$nom_dep <- as.factor(segreg_reduit$nom_dep)
-segreg_reduit_10l <- segreg_reduit[1:10,]
-summary(segreg_reduit_10l)
+summary(segreg_reduit)
 
 # Taux de scolarisation
 
 import_ts<- read.csv("data/Taux_scolarisation_petite_enfance.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
 ts_reduit <- bind_cols(import_ts[,c(1,6:7)])
-ts_reduit_10l <- ts_reduit[1:10,]
-summary(ts_reduit_10l)
+summary(ts_reduit)
 
 # Etudiant en mobilité internationale
 import_em <- read.csv("data/Pct_etudiants_en_mobilite.csv",sep=";",header=TRUE,dec=".",stringsAsFactors = T)
@@ -65,14 +61,13 @@ em_filtre <- em_reduit |>
 levels(em_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                 "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
                                 "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
-em_filtre_10l <- em_filtre[1:10,]
-summary(em_filtre_10l)
+
+summary(em_filtre)
 
 # France : Taux des scolarisations par département
 importfr_ts_dpt <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=1)
 importfr_ts_dpt[,c("Numéro département","Libellé département")] <- lapply(importfr_ts_dpt[,c("Numéro département","Libellé département")],factor)
-importfr_ts_dpt_10l <- importfr_ts_dpt[1:10,]
-summary(importfr_ts_dpt_10l)
+summary(importfr_ts_dpt)
 
 #France : Taux des scolarisations par région
 importfr_ts_rg <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=2)
@@ -107,8 +102,7 @@ fr_dnb_reduit <- importfr_dnb[,c(1,3,5,8:9,12:20)]
 fr_dnb_reduit[,c(2:7)] <- lapply(fr_dnb_reduit[,c(2:7)],factor)
 fr_dnb_filtre <- fr_dnb_reduit|> 
   dplyr::filter(Session>=2014,Session<=2021)
-fr_dnb_reduit_10l <- fr_dnb_reduit[1:10,]
-summary(fr_dnb_reduit_10l)
+summary(fr_dnb_filtre)
 
 
 # France : boursier par établissement
@@ -118,8 +112,7 @@ colnames(importfr_boursiers_dpt) <- c("Rentrée scolaire","Libellé formation","
                                       "Nb boursiers", "Commentaire_Nb boursiers","Nb dernier échelon","Commentaire_Nb dernier échelon")
 fr_boursiers_dpt_reduit <- importfr_boursiers_dpt[,c(1,4:7)]
 fr_boursiers_dpt_reduit[,c(2:4)] <- lapply(fr_boursiers_dpt_reduit[,c(2:4)],factor)
-fr_boursiers_dpt_10l <- fr_boursiers_dpt_reduit[1:10,]
-summary(fr_boursiers_dpt_10l)
+summary(fr_boursiers_dpt_reduit)
 
 
 # France : Bac par académie
@@ -132,6 +125,60 @@ colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du c
                                      "Nombre d admis avec mention B","Nombre d admis avec mention AB","Nombre d admis sans mention","Nombre de refusés totaux")
 fr_bac_academie_reduit <- importfr_bac_academie[,c(1,3,5,8:21)]
 fr_bac_academie_reduit[,c(2:3)] <- lapply(fr_bac_academie_reduit[,c(2:3)],factor)
-fr_bac_academie_10l<- fr_bac_academie_reduit[1:10,]
-summary(fr_bac_academie_10l)
+summary(fr_bac_academie_reduit)
 
+
+
+### Acceuil --- 
+# Value-box
+
+education_nationale <- valueBox(
+  "1932" , "L'instruction publique devient l'éducation nationale (renommé par le gouvernement d'Edouard Herriot",
+  icon = icon("school"), color = "green"
+)
+
+Loi_Falloux_Box <- valueBox(
+  1850, "Loi Falloux incite à ouvrir des écoles pour filles",
+  icon = icon("list"),color = "purple"
+)
+
+Progres_filles <- valueBox(
+  1880, "Les filles ont le droit d'aller au collège et au lycée", 
+  icon = icon("list"), color ="green"
+)
+
+Gratuite <- valueBox(
+  "1881-1882", "Gratuité de l'enseignement public par la loi Jules FERRY. L'Enseignement devient laïque et obligatoire",
+  icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow"
+)
+
+Separation_eglise_etat <- valueBox(
+  "1905", "Séparation de l'Eglise et de l'Etat",
+  icon = icon("bolt"), color = "red"
+)
+
+Bac_filles <- valueBox(
+  "1923", "Les filles ont le droit de passer le baccalauréat",
+  icon = icon("briefcase"), color = "maroon"
+)
+
+
+Prog_identiques <- valueBox(
+  "1924", "Programmes du collège et du lycée identiques pour les filles et les garçons",
+  icon = icon("briefcase"), color = "blue"
+)
+
+Ecole_obligatoire_16 <- valueBox(
+  "1959", "Ecole obligatoire jusqu'à 16 ans",
+  icon = icon("school"), color = "fuchsia"
+)
+
+Mixite_filles_garcons <- valueBox(
+  "1969", "Mixité : Garçons et filles réunis au sein des mêmes établissements",
+  icon = icon("children"), color = "teal"
+)
+
+Creations_bacs_pros <- valueBox(
+  "1992", "Création des bacs professionnels",
+  icon = icon("graduation-cap"), color = "olive"
+)
