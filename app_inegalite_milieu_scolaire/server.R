@@ -52,23 +52,23 @@ shinyServer(function(input, output) {
   ## Image personnages important
   
   output$Jules_FERRY <- renderImage({
-    list(src="www/jules_FERRY.jpg",alt="Jules_FERRY",width=300,height=400,style='position : relative')
+    list(src="www/jules_FERRY.jpg",alt="Jules_FERRY",width=200,height=250,style='position : relative')
   },deleteFile=FALSE)
   
   output$Martin_LUTHER <- renderImage({
-    list(src="www/Martin_LUTHER.jpg",alt="Martin_LUTHER",width=300,height=400,style='position : relative')
+    list(src="www/Martin_LUTHER.jpg",alt="Martin_LUTHER",width=200,height=250,style='position : relative')
   },deleteFile=FALSE)
   
   output$Mustafa_Kemal_Atatürk <- renderImage({
-    list(src="www/Mustafa_Kemal_Atatürk.jpg",alt="Mustafa_Kemal_Atatürk",width=300,height=400,style='position : relative')
+    list(src="www/Mustafa_Kemal_Atatürk.jpg",alt="Mustafa_Kemal_Atatürk",width=200,height=250,style='position : relative')
   },deleteFile=FALSE)
   
   output$Francisco_Giner_de_los_Ríos <- renderImage({
-    list(src="www/Francisco_Giner_de_los_Ríos.jpg",alt="Francisco_Giner_de_los_Ríos",width=300,height=400,style='position : relative')
+    list(src="www/Francisco_Giner_de_los_Ríos.jpg",alt="Francisco_Giner_de_los_Ríos",width=200,height=250,style='position : relative')
   },deleteFile=FALSE)
   
   output$Mori_Arinori <- renderImage({
-    list(src="www/Mori_Arinori.jpg",alt="Mori_Arinori",width=300,height=400,style='position : relative')
+    list(src="www/Mori_Arinori.jpg",alt="Mori_Arinori",width=200,height=250,style='position : relative')
   },deleteFile=FALSE)
   
   ### Inégalités socio-économiques
