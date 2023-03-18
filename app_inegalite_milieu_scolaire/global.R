@@ -78,7 +78,8 @@ summary(importfr_ts_dpt_10l)
 importfr_ts_rg <- read_excel("data/Fr-taux_scolarisation.xlsx",sheet=2)
 importfr_ts_rg$Numero <- factor(importfr_ts_rg$Numero)
 importfr_ts_rg$Region <- factor(importfr_ts_rg$Region)
-summary(importfr_ts_rg_10l)
+
+summary(importfr_ts_rg)
 
 # France : réussite bac 
 
@@ -94,4 +95,43 @@ fr_rb_filtre <- import_fr_rb|>
 
 fr_rb <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
 summary(fr_rb)
+
+# France : Brevet par établissement
+importfr_dnb <- read.csv("data/Fr-dnb-par-etablissement.csv",sep=";",header=TRUE)
+colnames(importfr_dnb) <- c("Session","Numero d'etablissement","Type d'etablissement","Patronyme",
+                            "Secteur d'enseignement","Commune","Libellé commune","Code département",
+                            "Libellé_département","Code académie","Libellé académie", "Code région",
+                            "Libellé région","Inscrits","Presents", "Admis",
+                            "Admis sans mention","Nombre d admis Mention AB","Admis Mention bien","Admis Mention très bien","Taux de réussite")
+fr_dnb_reduit <- importfr_dnb[,c(1,3,5,8:9,12:20)]
+fr_dnb_reduit[,c(2:7)] <- lapply(fr_dnb_reduit[,c(2:7)],factor)
+fr_dnb_filtre <- fr_dnb_reduit|> 
+  dplyr::filter(Session>=2014,Session<=2021)
+fr_dnb_reduit_10l <- fr_dnb_reduit[1:10,]
+summary(fr_dnb_reduit_10l)
+
+
+# France : boursier par établissement
+importfr_boursiers_dpt <- read.csv("data/Fr-boursiers-par-departement.csv",sep=";",header=TRUE)
+colnames(importfr_boursiers_dpt) <- c("Rentrée scolaire","Libellé formation","X_Type étab",
+                                      "Secteur","Numéro département","Libellé département",
+                                      "Nb boursiers", "Commentaire_Nb boursiers","Nb dernier échelon","Commentaire_Nb dernier échelon")
+fr_boursiers_dpt_reduit <- importfr_boursiers_dpt[,c(1,4:7)]
+fr_boursiers_dpt_reduit[,c(2:4)] <- lapply(fr_boursiers_dpt_reduit[,c(2:4)],factor)
+fr_boursiers_dpt_10l <- fr_boursiers_dpt_reduit[1:10,]
+summary(fr_boursiers_dpt_10l)
+
+
+# France : Bac par académie
+importfr_bac_academie <- read.csv("data/Fr-bac_par_academie.csv",sep=";",header=TRUE)
+colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du candidat","Voie","Série",
+                                     "Diplôme spécialité","Nombre d inscrits","Nombre de présents","Nombre d admis au 1er groupe",
+                                     "Nombre de refusés au 1er groupe","Nombre d ajournés  passant les épreuves du 2nd groupe",
+                                     "Nombre d admis à l issue du 2nd groupe","Nombre de refusés à l issue du 2nd groupe","Nombre d admis totaux",
+                                     "Nombre d admis avec mention TB avec les félicitations du jury","Nombre d admis avec mention TB sans les félicitations du jury",
+                                     "Nombre d admis avec mention B","Nombre d admis avec mention AB","Nombre d admis sans mention","Nombre de refusés totaux")
+fr_bac_academie_reduit <- importfr_bac_academie[,c(1,3,5,8:21)]
+fr_bac_academie_reduit[,c(2:3)] <- lapply(fr_bac_academie_reduit[,c(2:3)],factor)
+fr_bac_academie_10l<- fr_bac_academie_reduit[1:10,]
+summary(fr_bac_academie_10l)
 
