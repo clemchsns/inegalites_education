@@ -200,9 +200,10 @@ shinyUI(
                             tabPanel("Taux de réussite DNB par département",
                                      fluidRow(style="margin:6px;",
                                               radioButtons(inputId="annee_geo",label = "Choisissez une année",inline = TRUE,choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
-                                              withSpinner(
-                                                plotOutput("carte_reussite_DNB"),
-                                                type = 1))
+                                              # withSpinner(
+                                              #   plotOutput("carte_reussite_DNB"),
+                                              #   type = 1)
+                                              )
                             ),
                             tabPanel("PCS majoritaire par département",
                                      fluidRow(style="margin:6px;",
