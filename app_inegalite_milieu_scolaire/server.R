@@ -200,7 +200,7 @@ shinyServer(function(input, output) {
     
     m <- ggplot(d)+
       aes(x=TIME,y=nb_moy)+
-      geom_line()+
+      geom_line(color="#87cefa")+
       labs(xlabs = "Année", ylab="Nombre moyen d'enseignant par élèves", title = paste("Evolution du nombre d'enseignant par élèves en ",input$Pays_enseignant))+
       theme(plot.title = element_text(hjust = 0.5))
     m
