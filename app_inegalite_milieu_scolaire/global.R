@@ -2,6 +2,9 @@ library(shinydashboard)
 library(readxl)
 library(readr)
 library(tidyverse)
+library(treemap)
+library(shinycssloaders) # pour le withspinner
+library(rAmCharts)
 
 # -- Importation --
 
@@ -10,13 +13,13 @@ import_epe<-  read.csv("data/Enseignant_par_eleves.csv",sep=";",header=TRUE,stri
 epe_reduit <- import_epe[,c(1,6:7)]
 
 colnames(epe_reduit) <- c("LOCATION","TIME","VALUE")
-epe_filtre <- epe_reduit |> 
+enseignant_par_eleves <- epe_reduit |> 
   dplyr::filter(TIME>=2014,TIME<=2021)
 
-epe_filtre$ACRONYME_PAYS <- epe_filtre$LOCATION
-epe_filtre$ACRONYME_PAYS <- as.factor(epe_filtre$ACRONYME_PAYS)
-epe_filtre$LOCATION <- as.factor(epe_filtre$LOCATION)
-levels(epe_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
+enseignant_par_eleves$ACRONYME_PAYS <- enseignant_par_eleves$LOCATION
+enseignant_par_eleves$ACRONYME_PAYS <- as.factor(enseignant_par_eleves$ACRONYME_PAYS)
+enseignant_par_eleves$LOCATION <- as.factor(enseignant_par_eleves$LOCATION)
+levels(enseignant_par_eleves$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                  "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
                                  "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
 
@@ -35,16 +38,16 @@ summary(tod_filtre)
 # France : indicateur de ségrégation sociale
 
 import_segreg <- read.csv("data/Fr_indicateur_segregation_sociale_colleges.csv",sep=";",dec=".",header=TRUE,stringsAsFactor=TRUE)
-segreg_reduit <- import_segreg[,c(2,4:6,8,9,11:25,27,28)]
-colnames(segreg_reduit) <- c("annee","nom_academie","dep","nom_dep",
+fr_indicateur_segreg_college <- import_segreg[,c(2,4:6,8,9,11:25,27,28)]
+colnames(fr_indicateur_segreg_college) <- c("annee","nom_academie","dep","nom_dep",
                              "nb_college_PU","nb_college_PR",
                              "proportion_tfav","proportion_fav","proportion_moy","proportion_defav",
                              "proportion_tfav_PU","proportion_fav_PU","proportion_moy_PU","proportion_defav_PU",
                              "proportion_tfav_PR","proportion_fav_PR","proportion_moy_PR","proportion_defav_PR",
                              "indice_entropie_total","indice_entropie_PU","indice_entropie_PR",
                              "contrib_college_PU","contrib_college_PR")
-segreg_reduit$nom_dep <- as.factor(segreg_reduit$nom_dep)
-summary(segreg_reduit)
+fr_indicateur_segreg_college$nom_dep <- as.factor(fr_indicateur_segreg_college$nom_dep)
+summary(fr_indicateur_segreg_college)
 
 # Taux de scolarisation
 
@@ -88,8 +91,8 @@ fr_rb_filtre <- import_fr_rb|>
   dplyr::filter(Annee>=2014,Annee<=2021) |> 
   dplyr::filter(Origine_sociale!="Professions intermediaires : instituteurs et assimiles")
 
-fr_rb <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
-summary(fr_rb)
+fr_reussite_bac <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
+summary(fr_reussite_bac)
 
 # France : Brevet par établissement
 importfr_dnb <- read.csv("data/Fr-dnb-par-etablissement.csv",sep=";",header=TRUE)
@@ -100,9 +103,9 @@ colnames(importfr_dnb) <- c("Session","Numero d'etablissement","Type d'etablisse
                             "Admis sans mention","Nombre d admis Mention AB","Admis Mention bien","Admis Mention très bien","Taux de réussite")
 fr_dnb_reduit <- importfr_dnb[,c(1,3,5,8:9,12:20)]
 fr_dnb_reduit[,c(2:7)] <- lapply(fr_dnb_reduit[,c(2:7)],factor)
-fr_dnb_filtre <- fr_dnb_reduit|> 
+fr_dnb_etablissement <- fr_dnb_reduit|> 
   dplyr::filter(Session>=2014,Session<=2021)
-summary(fr_dnb_filtre)
+summary(fr_dnb_etablissement)
 
 
 # France : boursier par établissement
@@ -182,3 +185,61 @@ Creations_bacs_pros <- valueBox(
   "1992", "Création des bacs professionnels",
   icon = icon("graduation-cap"), color = "olive"
 )
+
+
+
+### Inégalités socio-économiques
+
+# value-box
+
+# Moyenne du pct d'admis au baccalauréat selon la PCS 
+df_PCS <- data.frame(
+  value = aggregate(`Pourcentage d'admis au baccalaureat`~ Origine_sociale,data=fr_reussite_bac,mean)
+)
+colnames(df_PCS) <- c("Origine_sociale","Pct_admis_baccalaureat")
+df_PCS_filtre <- df_PCS |> dplyr::filter(Origine_sociale!="Ensemble")
+df_PCS
+
+baccalaureat_cadre <- df_PCS |> 
+  dplyr::filter(Origine_sociale=='Cadres, professions intellectuelles superieures')
+baccalaureat_cadre
+
+baccalaureat_sans_emploi <-df_PCS |> 
+  dplyr::filter(Origine_sociale=='Autres personnes sans activite professionnelle')
+baccalaureat_sans_emploi
+
+baccalaureat <- round(sum(df_PCS$Pct_admis_baccalaureat)/nrow(df_PCS))
+baccalaureat
+
+
+# Taux de réussite DNB selon le secteur (etablissement)
+taux_reussite_public <- fr_dnb_etablissement |> 
+  select(`Secteur d'enseignement`,Admis,Inscrits) |> 
+  dplyr::filter(`Secteur d'enseignement`=="PUBLIC") |> 
+  summarise(moy_reussite_public = round(mean(Admis/Inscrits),3))
+colnames(taux_reussite_public) <- "Collèges publics"
+
+taux_reussite_prive <- fr_dnb_etablissement |> 
+  select(`Secteur d'enseignement`,Admis,Inscrits) |> 
+  dplyr::filter(`Secteur d'enseignement`=="PRIVE") |> 
+  summarise(moy_reussite_prive= round(mean(Admis/Inscrits),3))
+colnames(taux_reussite_prive) <- "Collèges privés"
+
+taux_reussite_secteur <- cbind(taux_reussite_prive,taux_reussite_public)
+taux_reussite_secteur
+
+
+# Comparaison des PCS entre le college prive et public
+PCS <- c("Tres favorise","favorise","moyenne","defavorise")
+val_college_PU <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PU),
+                    mean(fr_indicateur_segreg_college$proportion_fav_PU),
+                    mean(fr_indicateur_segreg_college$proportion_moy_PU),
+                    mean(fr_indicateur_segreg_college$proportion_defav_PU))
+val_college_PR <- c(mean(fr_indicateur_segreg_college$proportion_tfav_PR),
+                    mean(fr_indicateur_segreg_college$proportion_fav_PR),
+                    mean(fr_indicateur_segreg_college$proportion_moy_PR),
+                    mean(fr_indicateur_segreg_college$proportion_defav_PR))
+
+df_comparaison_pcs_PU_PR <- data.frame(PCS, college_prive=val_college_PR,college_public=val_college_PU)
+comp_college_PU_PR <- amBarplot(x = "PCS", y = c("college_prive", "college_public"),groups_color = c("#87cefa", "#c7158"), legend=TRUE,data = df_comparaison_pcs_PU_PR,title="Comparaison des PCS entre le collège prive et public")
+

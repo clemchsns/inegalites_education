@@ -49,6 +49,178 @@ shinyServer(function(input, output) {
     Creations_bacs_pros
   })
   
-
+  ## Image personnages important
+  
+  output$Jules_FERRY <- renderImage({
+    list(src="www/jules_FERRY.jpg",alt="Jules_FERRY",width=300,height=400,style='position : relative')
+  },deleteFile=FALSE)
+  
+  output$Martin_LUTHER <- renderImage({
+    list(src="www/Martin_LUTHER.jpg",alt="Martin_LUTHER",width=300,height=400,style='position : relative')
+  },deleteFile=FALSE)
+  
+  output$Mustafa_Kemal_Atatürk <- renderImage({
+    list(src="www/Mustafa_Kemal_Atatürk.jpg",alt="Mustafa_Kemal_Atatürk",width=300,height=400,style='position : relative')
+  },deleteFile=FALSE)
+  
+  output$Francisco_Giner_de_los_Ríos <- renderImage({
+    list(src="www/Francisco_Giner_de_los_Ríos.jpg",alt="Francisco_Giner_de_los_Ríos",width=300,height=400,style='position : relative')
+  },deleteFile=FALSE)
+  
+  output$Mori_Arinori <- renderImage({
+    list(src="www/Mori_Arinori.jpg",alt="Mori_Arinori",width=300,height=400,style='position : relative')
+  },deleteFile=FALSE)
+  
+  ### Inégalités socio-économiques
+  
+  # Values-box
+  output$bac_origine_sociale <- renderValueBox({
+    valueBox(
+      paste(baccalaureat,"%"),
+      subtitle = " d'admis au baccalauréat quelque soit la classe sociale",
+      icon = icon('graduation-cap'),
+      color = "green"
+    )
+  })
+  
+  output$bac_sans_emploi <- renderValueBox({
+    valueBox(
+      paste(round(baccalaureat_sans_emploi$Pct_admis_baccalaureat),"%"),
+      subtitle = "d'admis au baccalauréat avec des parents sans activite professionnelle",
+      icon = icon('graduation-cap'),
+      color = "red"
+    )
+  })
+  
+  output$bac_cadre <- renderValueBox({
+    valueBox(
+      paste(round(baccalaureat_cadre$Pct_admis_baccalaureat),"%"),
+      subtitle = "d'admis au baccalauréat avec des parents cadres ou en professions intellectuelles supérieures",
+      icon = icon('graduation-cap'),
+      color = "green"
+    )
+  })
+  
+  # Classes sociales au college
+  output$treemap_college <- renderPlot({
+    
+    df <- data.frame(
+      group = c("très favorisé","favorisé","moyenne","défavorisé"),
+      value = c(mean(fr_indicateur_segreg_college$proportion_tfav[fr_indicateur_segreg_college$nom_dep==input$nom_departement&fr_indicateur_segreg_college$annee==input$annee]),
+                mean(fr_indicateur_segreg_college$proportion_fav[fr_indicateur_segreg_college$nom_dep==input$nom_departement&fr_indicateur_segreg_college$annee==input$annee]),
+                mean(fr_indicateur_segreg_college$proportion_moy[fr_indicateur_segreg_college$nom_dep==input$nom_departement&fr_indicateur_segreg_college$annee==input$annee]),
+                mean(fr_indicateur_segreg_college$proportion_defav[fr_indicateur_segreg_college$nom_dep==input$nom_departement&fr_indicateur_segreg_college$annee==input$annee]))
+    )
+    p <- treemap(df,
+                 index="group",
+                 vSize="value",
+                 type="index",
+                 border.col = "black",
+                 palette = "Blues",
+                 title="Répartition des classes sociales au collège")
+    p
+    
+  })
+  
+  # PCS au lycee
+  output$camembert_lycee <- renderPlot({
+    pie <- ggplot(df_PCS)+
+      aes(x="",y="Pct_admis_baccalaureat",fill=Origine_sociale)+
+      geom_bar(width = 1,stat="identity")+
+      xlab("")+ylab("")+
+      coord_polar("y",start=0)+
+      theme_minimal()+
+      ggtitle("Répartition des PCS au lycée")+
+      theme(plot.title = element_text(hjust = 0.5))
+    pie
+    
+  })
+  
+  # Reussite bac selon PCS au lycee
+  output$reussite_bac_PCS <- renderPlot({
+    df_courbe_reussite_bac <- fr_reussite_bac |> dplyr::filter(Origine_sociale==input$origine_sociale)
+    # amPlot(Annee~`Pourcentage d'admis au baccalaureat general`,data = df_courbe_reussite_bac, type="l")
+    ggplot(df_courbe_reussite_bac)+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat general`,color="baccalauréat général"))+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat technologique`,color="baccalauréat technologique"))+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat professionnel`,col="baccalauréat professionnel"))+
+      labs(xlab = "Année", ylab = "Pourcentage d'admis",color="Bacs:",title="Réussite par bac selon la PCS")+
+      theme(plot.title = element_text(hjust = 0.5))
+  })
+  
+  # Boutton de téléchargement
+  # 
+  # output$downloadPlot <- downloadHandler(
+  #   filename = function(){
+  #     paste("graphique_",Sys.Date(),".png",sep="")
+  #   },
+  #   content = function(file){
+  #     ggsave(file,plot = output$reussite_bac_PCS())
+  #   }
+  # )
+  
+  # Créer une réaction au clic sur le graphique
+  # observeEvent(input$plotClick, {
+  #   filename <- paste("graphique_", Sys.Date(), ".png", sep="")
+  #   ggsave(filename, plot = output$reussite_bac_PCS)
+  #   file.rename(filename, paste0("./", filename))
+  # })
+  
+  # output$telechargement <- downloadHandler(
+  #   filename = function(file) {
+  #     paste("graphique_", Sys.Date(), ".png", sep="")
+  #   },
+  #   content = function(file) {
+  #     ggsave(file, plot = output$reussite_bac_PCS,device="png")
+  #   }
+  #   
+  # )
+  
+  # Table reussite DNB selon le secteur privé / public 
+  output$reussite_secteur <- renderDataTable({
+    taux_reussite_secteur
+  })
+  
+  
+  # Classes sociales au college prive / public
+  output$amchartComparaisonPCS <- renderAmCharts({
+    comp_college_PU_PR
+  })
+  
+  
+  ### --- Inegalités territoriales ----
+  
+  # Evolution du nombre d'enseignant par élèves 
+  # Premier pays
+  output$evol_enseignant_eleves <- renderPlot({
+    d <- enseignant_par_eleves |>
+      dplyr::filter(LOCATION==input$Pays_enseignant) |> 
+      group_by(TIME) |>
+      mutate(nb_moy = mean(VALUE))
+    
+    m <- ggplot(d)+
+      aes(x=TIME,y=nb_moy)+
+      geom_line()+
+      labs(xlabs = "Année", ylab="Nombre moyen d'enseignant par élèves", title = paste("Evolution du nombre d'enseignant par élèves en ",input$Pays_enseignant))+
+      theme(plot.title = element_text(hjust = 0.5))
+    m
+    
+  })
+  
+  # Deuxième pays
+  output$evol_enseignant_eleves_2 <- renderPlot({
+    e <- enseignant_par_eleves |>
+      dplyr::filter(LOCATION==input$Pays_enseignant2) |> 
+      group_by(TIME) |>
+      mutate(nb_moy = mean(VALUE))
+    
+    m <- ggplot(e)+
+      aes(x=TIME,y=nb_moy)+
+      geom_line()+
+      labs(xlabs = "Année", ylab="Nombre moyen d'enseignant par élèves", title = paste("Evolution du nombre d'enseignant par élèves en",input$Pays_enseignant2))+
+      theme(plot.title = element_text(hjust = 0.5))
+    m
+    
+  })
   
 })

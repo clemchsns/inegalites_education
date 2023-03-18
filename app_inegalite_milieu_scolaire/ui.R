@@ -70,12 +70,131 @@ shinyUI(
                              valueBoxOutput("mixite"),
                              valueBoxOutput("creation_bac_pro")
                            )
-                           )# ferme le tabPanel les grandes lois sur l'écoles
+                           ),# ferme le tabPanel les grandes lois sur l'écoles
+                  tabPanel("Personnages importants (dans les pays de l'OCDE)",
+                           fluidRow(style='margin:6px;'),
+                           fluidRow(
+                             box(title="En France",h1("Jules FERRY"),imageOutput("Jules_FERRY"),status = "primary"),
+                             box(title="En Allemagne",h1("Martin LUTHER"),imageOutput("Martin_LUTHER"),status="success")
+                           ), # ferme le fluidRow
+                           fluidRow(
+                             box(title ="En Espagne",h1("Francisco Giner de los Ríos"),imageOutput("Francisco_Giner_de_los_Ríos"),status="warning"),
+                             box(title= "En Turquie", h1("Mustafa Kemal Atatürk"),imageOutput("Mustafa_Kemal_Atatürk"),status = "info")
+                           ),
+                           fluidRow(
+                             box(title = "Au Japon", h1("Deux principaux acteurs :"), h2("Gouvernement Japonais"),h2("Mori Arinori"),imageOutput("Mori_Arinori"),status = "danger"),
+                             box(title = "Au Canada",p("L'éducation au Canada est gérée au niveau provincial et territorial plutôt qu'au niveau fédéral. Cela signifie que chaque province et territoire a mis en place son propre système d'éducation, et que l'histoire et l'évolution de l'éducation nationale varient d'une région à l'autre."))
+                           )
+                           ) # ferme le tabPanel Personnages importants
                   ) # ferme le tabSetPanel
                 ), # ferme le tabItem Acceuil
                 
-                tabItem("social"),
-                tabItem("geo"),
+                tabItem("social",
+                        sidebarLayout(
+                          sidebarPanel(
+                            selectizeInput("nom_departement",label="Choisissez un département :",
+                                           choices=list("AIN","AISNE","ALLIER","ALPES-DE-HTE-PROVENCE","ALPES-MARITIMES","ARDECHE","ARDENNES","ARIEGE","AUBE","AUDE","AVEYRON","BAS-RHIN","BOUCHES-DU-RHONE","CALVADOS","CANTAL","CHARENTE","CHARENTE-MARITIME",
+                                                        "CHER","CORREZE","CORSE-DU-SUD", "COTE D'OR","COTES D'ARMOR","CREUSE","DEUX-SEVRES","DORDOGNE","DOUBS","DROME","Ensemble de l'acadÃ©mie","ESSONNE",
+                                                        "EURE","EURE-ET-LOIR","FINISTERE","GARD","GERS" ,"GIRONDE","GUADELOUPE","GUYANE","HAUT-RHIN","HAUTE-CORSE" ,"HAUTE-GARONNE","HAUTE-LOIRE","HAUTE-MARNE","HAUTE-SAONE","HAUTE-VIENNE","HAUTE SAVOIE","HAUTES-ALPES","HAUTES-PYRENEES","HAUTS-DE-SEINE","HERAULT","ILLE-ET-VILAINE" ,"INDRE","INDRE-ET-LOIRE","ISERE","JURA","LA REUNION","LANDES","LOIR-ET-CHER","LOIRE","LOIRE-ATLANTIQUE","LOIRET","LOT","LOT-ET-GARONNE","LOZERE","MAINE-ET-LOIRE","MANCHE","MARNE","MARTINIQUE", "MAYENNE","MAYOTTE","MEURTHE-ET-MOSELLE","MEUSE","MORBIHAN","MOSELLE","NIEVRE","NORD","OISE","ORNE","PARIS","PAS-DE-CALAIS","PUY-DE-DOME","PYRENEES-ATLANTIQUES","PYRENEES-ORIENTALES","RHONE","SAONE-ET-LOIRE","SARTHE","SAVOIE","SEINE-ET-MARNE","SEINE-SAINT-DENIS","SEINE MARITIME","SOMME","TARN","TARN-ET-GARONNE","TERRITOIRE DE BELFORT","VAL-D'OISE","VAL-DE-MARNE","VAR","VAUCLUSE","VENDEE","VIENNE","VOSGES","YONNE","YVELINES")
+                            ),
+                            radioButtons(inputId="annee",label = "Choisissez une année :",choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
+                            selectizeInput("origine_sociale",label="Origine Sociale",
+                                           choices = list("Agriculteurs exploitants","Artisans, commerçants, chefs d'entreprise","Autres personnes sans activité professionnelle",
+                                                          "Cadres, professions intellectuelles supérieures","Cadres, professions intellectuelles supérieures : professeurs et assimilés",
+                                                          "dont instituteurs et assimilés","dont professeurs et assimilés","Employés","Ensemble","Indéterminé","Ouvriers",
+                                                          "Professions intermédiaires","Professions intermédiaires : instituteurs et assimilés","Retraités")),
+                            width = 3
+                          ),
+                        mainPanel(
+                          tabsetPanel(
+                            tabPanel("Origines sociales",
+                                     style='margin:6px;',
+                                     h1("L'impact de l'origine sociale sur la scolarité"),
+                                     
+                                     h2(paste0("Des chiffres clés")),
+                                     fluidRow(
+                                       valueBoxOutput("bac_origine_sociale") ,
+                                       valueBoxOutput("bac_sans_emploi") ,
+                                       valueBoxOutput("bac_cadre")
+                                     ),
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                plotOutput("treemap_college"),
+                                                type = 1)
+                                              ),
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                plotOutput("camembert_lycee"),
+                                                type = 1)
+                                              ),
+                                     # Modifier la mise en page de ce graphique : 
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                plotOutput("reussite_bac_PCS"), #, click = "plotClick"),
+                                                type = 1)
+                                              # downloadButton("telechargement","Téléchargement")
+                                              # downloadButton("downloadPlot","Télécharger le graphique
+                                     )
+                            ), # ferme tabPanel Origine sociale
+                            tabPanel("Privé ou public ?",
+                                     style='margin:6px;',
+                                     h1("L'impact du privé et du public sur la scolarité"),
+                                     
+                                     h2("Taux de réussite au Diplôme National du Brevet"),
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                dataTableOutput("reussite_secteur"),
+                                                type = 1)),
+                                     
+                                     h2("Professions et Catégories Sociales selon le secteur d'enseignement"),
+                                     fluidRow(style="margin:6px;",
+                                              withSpinner(
+                                                amChartsOutput("amchartComparaisonPCS"),
+                                                type = 1)),
+                                     fluidRow(
+                                       verbatimTextOutput("comm_amchartComparaisonPCS")
+                                     )
+                            )
+                            
+                          )
+                        ) # ferme le mainPanel
+                        ) # ferme le sidebarLayout
+                        ), # ferme le tabItem Acceuil
+        
+        ### Inégalités territoriales
+                tabItem("geo",
+                        fluidPage(
+                          titlePanel("Les inégalités territoriales"),
+                          tabsetPanel(
+                            tabPanel("Condition d'apprentissage", # evolution du nombre d'enseignant par élève et le taux reussite
+                                     fluidRow(
+                                       selectizeInput("Pays_enseignant",label="Pays",
+                                                      choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
+                                                                     "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
+                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")),
+                                       selectizeInput("Pays_enseignant2",label="Pays",
+                                                      choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
+                                                                     "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
+                                                                     "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA"))
+                                       
+                                     ),
+                                     fluidRow(
+                                       verbatimTextOutput("comparaison_evol_enseignant_eleves"),
+                                       box(title="Evolution nombre d'enseignant par élèves",
+                                           withSpinner(
+                                             plotOutput("evol_enseignant_eleves"),
+                                             type = 1)
+                                       ),
+                                       box(title = "Evolution du nombre d'enseignant par élèves",
+                                           withSpinner(
+                                             plotOutput("evol_enseignant_eleves_2"),
+                                             type = 1)
+                                       )
+                                     )
+                            )
+                          )
+                        )
+                        ), # ferme le tabItem géo 
                 tabItem("genre"),
                 tabItem("BDD"))
       )
