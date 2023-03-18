@@ -1,4 +1,5 @@
-library(shiny)
+# library(shiny)
+library(shinydashboard)
 
 shinyUI(
   dashboardPage(
@@ -33,7 +34,8 @@ shinyUI(
                                         Le ministère de l'Éducation nationale est dirigé par un ministre nommé par le Président de la République, sur proposition du Premier ministre. 
                                         Le ministre est assisté d'un secrétaire d'État chargé de l'Enseignement supérieur et de la Recherche.
                                         L'Éducation nationale en France est chargée de garantir l'égalité des chances pour tous les élèves et de promouvoir la réussite scolaire."
-                                 )))))),
+                                 ))
+                             )))),
                 
                 tabItem("social"),
                 tabItem("geo"),

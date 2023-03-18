@@ -1,21 +1,7 @@
+library(shinydashboard)
 library(readxl)
 library(readr)
 library(tidyverse)
-library(leaflet)
-library(sf)
-library(rAmCharts)
-library(DT)
-library(BH)
-library(treemap)
-library(shiny)
-library(shinydashboard)
-library(shinyWidgets)
-library(shinythemes)
-library(dashboardthemes)
-library(shinycssloaders)
-library(rmapshaper)
-library(rnaturalearthdata)
-library(rnaturalearth)
 
 # -- Importation --
 
@@ -31,10 +17,11 @@ epe_filtre$ACRONYME_PAYS <- epe_filtre$LOCATION
 epe_filtre$ACRONYME_PAYS <- as.factor(epe_filtre$ACRONYME_PAYS)
 epe_filtre$LOCATION <- as.factor(epe_filtre$LOCATION)
 levels(epe_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
-                                            "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
-                                            "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
+                                 "France","G20","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
+                                 "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
 
 epe_filtre_10 <- epe_filtre[1:10,]
+
 
 # Taux optention diplôme
 import_tod <- read_excel("data/Taux_optention_diplome.xlsx",sheet=1)
@@ -52,12 +39,12 @@ summary(tod_filtre)
 import_segreg <- read.csv("data/Fr_indicateur_segregation_sociale_colleges.csv",sep=";",dec=".",header=TRUE,stringsAsFactor=TRUE)
 segreg_reduit <- import_segreg[,c(2,4:6,8,9,11:25,27,28)]
 colnames(segreg_reduit) <- c("annee","nom_academie","dep","nom_dep",
-                                            "nb_college_PU","nb_college_PR",
-                                            "proportion_tfav","proportion_fav","proportion_moy","proportion_defav",
-                                            "proportion_tfav_PU","proportion_fav_PU","proportion_moy_PU","proportion_defav_PU",
-                                            "proportion_tfav_PR","proportion_fav_PR","proportion_moy_PR","proportion_defav_PR",
-                                            "indice_entropie_total","indice_entropie_PU","indice_entropie_PR",
-                                            "contrib_college_PU","contrib_college_PR")
+                             "nb_college_PU","nb_college_PR",
+                             "proportion_tfav","proportion_fav","proportion_moy","proportion_defav",
+                             "proportion_tfav_PU","proportion_fav_PU","proportion_moy_PU","proportion_defav_PU",
+                             "proportion_tfav_PR","proportion_fav_PR","proportion_moy_PR","proportion_defav_PR",
+                             "indice_entropie_total","indice_entropie_PU","indice_entropie_PR",
+                             "contrib_college_PU","contrib_college_PR")
 segreg_reduit$nom_dep <- as.factor(segreg_reduit$nom_dep)
 segreg_reduit_10l <- segreg_reduit[1:10,]
 summary(segreg_reduit_10l)
@@ -76,8 +63,8 @@ colnames(em_reduit) <- c("LOCATION","TIME","VALUE")
 em_filtre <- em_reduit |> 
   dplyr::filter(TIME>=2014,TIME<=2021)
 levels(em_filtre$LOCATION) <- c("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
-                                    "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
-                                    "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
+                                "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
+                                "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")
 em_filtre_10l <- em_filtre[1:10,]
 summary(em_filtre_10l)
 
@@ -107,46 +94,4 @@ fr_rb_filtre <- import_fr_rb|>
 
 fr_rb <- fr_rb_filtre[!grepl("^dont", fr_rb_filtre$Origine_sociale), ]
 summary(fr_rb)
-
-
-# France : Brevet par établissement
-importfr_dnb <- read.csv("data/Fr-dnb-par-etablissement.csv",sep=";",header=TRUE)
-colnames(importfr_dnb) <- c("Session","Numero d'etablissement","Type d'etablissement","Patronyme",
-                            "Secteur d'enseignement","Commune","Libellé commune","Code département",
-                            "Libellé_département","Code académie","Libellé académie", "Code région",
-                            "Libellé région","Inscrits","Presents", "Admis",
-                            "Admis sans mention","Nombre d admis Mention AB","Admis Mention bien","Admis Mention très bien","Taux de réussite")
-fr_dnb_reduit <- importfr_dnb[,c(1,3,5,8:9,12:20)]
-fr_dnb_reduit[,c(2:7)] <- lapply(fr_dnb_reduit[,c(2:7)],factor)
-fr_dnb_filtre <- fr_dnb_reduit|> 
-  dplyr::filter(Session>=2014,Session<=2021)
-fr_dnb_reduit_10l <- fr_dnb_reduit[1:10,]
-summary(fr_dnb_reduit_10l)
-
-
-# France : boursier par établissement
-importfr_boursiers_dpt <- read.csv("data/Fr-boursiers-par-departement.csv",sep=";",header=TRUE)
-colnames(importfr_boursiers_dpt) <- c("Rentrée scolaire","Libellé formation","X_Type étab",
-                                      "Secteur","Numéro département","Libellé département",
-                                      "Nb boursiers", "Commentaire_Nb boursiers","Nb dernier échelon","Commentaire_Nb dernier échelon")
-fr_boursiers_dpt_reduit <- importfr_boursiers_dpt[,c(1,4:7)]
-fr_boursiers_dpt_reduit[,c(2:4)] <- lapply(fr_boursiers_dpt_reduit[,c(2:4)],factor)
-fr_boursiers_dpt_10l <- fr_boursiers_dpt_reduit[1:10,]
-summary(fr_boursiers_dpt_10l)
-
-
-# France : Bac par académie
-importfr_bac_academie <- read.csv("data/Fr-bac_par_academie.csv",sep=";",header=TRUE)
-colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du candidat","Voie","Série",
-                                     "Diplôme spécialité","Nombre d inscrits","Nombre de présents","Nombre d admis au 1er groupe",
-                                     "Nombre de refusés au 1er groupe","Nombre d ajournés  passant les épreuves du 2nd groupe",
-                                     "Nombre d admis à l issue du 2nd groupe","Nombre de refusés à l issue du 2nd groupe","Nombre d admis totaux",
-                                     "Nombre d admis avec mention TB avec les félicitations du jury","Nombre d admis avec mention TB sans les félicitations du jury",
-                                     "Nombre d admis avec mention B","Nombre d admis avec mention AB","Nombre d admis sans mention","Nombre de refusés totaux")
-fr_bac_academie_reduit <- importfr_bac_academie[,c(1,3,5,8:21)]
-fr_bac_academie_reduit[,c(2:3)] <- lapply(fr_bac_academie_reduit[,c(2:3)],factor)
-fr_bac_academie_10l<- fr_bac_academie_reduit[1:10,]
-summary(fr_bac_academie_10l)
-
-
 
