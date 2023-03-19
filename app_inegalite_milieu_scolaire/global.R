@@ -145,7 +145,7 @@ levels(fr_effectif_sexe_reduit$Region_academique) <- c("Auvergne-Rhône-Alpes","
                                                          "LA-REUNION","MARTINIQUE","MAYOTTE","Normandie","Nouvelle-Aquitaine",
                                                          "Occitanie","Pays de la Loire","Provence-Alpes-Côte d'Azur")
 
-fr_effectif_sexe_2 <- fr_effectif_sexe_reduit |>
+fr_effectif_sexe <- fr_effectif_sexe_reduit |>
   filter(Region_academique!="GUADELOUPE"&Region_academique!="GUYANE"&Region_academique!="LA-REUNION"&Region_academique!="MARTINIQUE"&Region_academique!="MAYOTTE")
 
 summary(fr_effectif_sexe)
@@ -158,7 +158,8 @@ liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
                 "France : Taux de scolarisation par région"=fr_taux_scolarisation_reg,
                 'France : Réussite par baccalauréat'=fr_reussite_bac,
                 "France : Obtention du brevet par établissement"=fr_dnb_etablissement,
-                "France : Obtention du baccalauréat par académie"=fr_bac_academie)
+                "France : Obtention du baccalauréat par académie"=fr_bac_academie,
+                "France : Effectif des genres au collège"=fr_effectif_sexe)
 
 ### Accueil --- 
 # Value-box
@@ -352,12 +353,12 @@ voies <- ggplot(df_voies_professionnelles) +
 
 # regions <- read_sf("data/regions-20180101-shp/")
 # regions1 <- ms_simplify(regions)
-region4 <- merge(x = regions1, y= fr_effectif_sexe, by.x ="nom",by.y = "Région académique")
+region4 <- merge(x = regions1, y= fr_effectif_sexe, by.x ="nom",by.y = "Region_academique")
 
 region4_filtre <- region4 |> 
-  select()
+  select(nom,code_insee,`Rentree scolaire`,Secteur,`Nb 6eme filles`,geometry)
 
-coord_genre <- st_coordinates(region4)
+coord_genre <- st_coordinates(region4_filtre)
 longitude <- coord_genre[,"X"]
 latitude <- coord_genre[,"Y"]
 
@@ -366,7 +367,7 @@ carte_effectif_sexe <- leaflet() |>
   setView(lng = 2.80, lat = 46.80, zoom = 5) |> 
   addMarkers(longitude, latitude,clusterOptions = markerClusterOptions())
   
-carte_effectif_sexe
+# carte_effectif_sexe
 ### Commentaires graphiques ---
 
 # PCS
