@@ -306,6 +306,18 @@ carte_pcs <- leaflet() |>
   setView(lat = 46.2276, lng = 2.2137, zoom = 5)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 # Carte Taux de scolarisation en france
 regions <- read_sf("data/regions-20180101-shp/")
 regions1 <- ms_simplify(regions)
@@ -355,17 +367,17 @@ voies <- ggplot(df_voies_professionnelles) +
 # regions1 <- ms_simplify(regions)
 region4 <- merge(x = regions1, y= fr_effectif_sexe, by.x ="nom",by.y = "Region_academique")
 
-region4_filtre <- region4 |> 
+region4_filtre <- region4 |>
   select(nom,code_insee,`Rentree scolaire`,Secteur,`Nb 6eme filles`,geometry)
 
-coord_genre <- st_coordinates(region4_filtre)
-longitude <- coord_genre[,"X"]
-latitude <- coord_genre[,"Y"]
+# coord_genre <- st_coordinates(region4_filtre)
+# longitude <- coord_genre[,"X"]
+# latitude <- coord_genre[,"Y"]
 
-carte_effectif_sexe <- leaflet() |>
-  addTiles() |> 
-  setView(lng = 2.80, lat = 46.80, zoom = 5) |> 
-  addMarkers(longitude, latitude,clusterOptions = markerClusterOptions())
+# carte_effectif_sexe <- leaflet() |>
+#   addTiles() |> 
+#   setView(lng = 2.80, lat = 46.80, zoom = 5) |> 
+#   addMarkers(longitude, latitude,clusterOptions = markerClusterOptions())
   
 # carte_effectif_sexe
 ### Commentaires graphiques ---
