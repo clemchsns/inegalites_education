@@ -150,35 +150,7 @@ shinyServer(function(input, output) {
       labs(xlab = "Année", ylab = "Pourcentage d'admis",color="Bacs:",title="Réussite par baccalauréat selon la PCS")+
       theme(plot.title = element_text(hjust = 0.5))
   })
-  
-  # Boutton de téléchargement
-  # 
-  # output$downloadPlot <- downloadHandler(
-  #   filename = function(){
-  #     paste("graphique_",Sys.Date(),".png",sep="")
-  #   },
-  #   content = function(file){
-  #     ggsave(file,plot = output$reussite_bac_PCS())
-  #   }
-  # )
-  
-  # Créer une réaction au clic sur le graphique
-  # observeEvent(input$plotClick, {
-  #   filename <- paste("graphique_", Sys.Date(), ".png", sep="")
-  #   ggsave(filename, plot = output$reussite_bac_PCS)
-  #   file.rename(filename, paste0("./", filename))
-  # })
-  
-  # output$telechargement <- downloadHandler(
-  #   filename = function(file) {
-  #     paste("graphique_", Sys.Date(), ".png", sep="")
-  #   },
-  #   content = function(file) {
-  #     ggsave(file, plot = output$reussite_bac_PCS,device="png")
-  #   }
-  #   
-  # )
-  
+
   # Table reussite DNB selon le secteur privé / public 
   output$reussite_secteur <- renderDataTable({
     taux_reussite_secteur
@@ -280,6 +252,8 @@ shinyServer(function(input, output) {
     
     carte <- ggplot(dpt4)+
       aes(fill=reussite)+
+      labs(title="Taux de réussite au DNB par département")+
+      theme(plot.title = element_text(hjust = 0.5))+
       geom_sf()
     carte
   })

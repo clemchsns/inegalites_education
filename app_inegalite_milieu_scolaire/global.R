@@ -16,6 +16,28 @@ library(shinyWidgets)
 library(dashboardthemes)
 library(plotly)
 
+# Fonction ---
+if (!(require(jsonlite))) install.packages("jsonlite")
+mygeocode <- function(adresses){
+  # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
+  nominatim_osm <- function(address = NULL){
+    ## details: http://wiki.openstreetmap.org/wiki/Nominatim
+    ## fonction nominatim_osm proposée par D.Kisler
+    if(suppressWarnings(is.null(address)))  return(data.frame())
+    tryCatch(
+      d <- jsonlite::fromJSON(
+        gsub('\\@addr\\@', gsub('\\s+', '\\%20', address),
+             'http://nominatim.openstreetmap.org/search/@addr@?format=json&addressdetails=0&limit=1')
+      ), error = function(c) return(data.frame())
+    )
+    if(length(d) == 0) return(data.frame())
+    return(c(as.numeric(d$lon), as.numeric(d$lat)))
+  }
+  tableau <- t(sapply(adresses,nominatim_osm))
+  colnames(tableau) <- c("lon","lat")
+  return(tableau)
+}
+
 # -- Importation --
 
 # Enseignants par élèves
@@ -312,18 +334,20 @@ dpt_pcs_maj3 <- dpt_pcs_maj |>
 dpt_pcs_maj3
 
 
-carte_pcs <-  leaflet() |> 
-  addTiles() |>
-  setView(lat = 46.2276, lng = 2.2137, zoom = 5) |> 
-  addCircleMarkers(
-    lng=longitude, lat=latitude,
-    radius = 5,
-    color = "red")
-    # fillColor = ~colorFactor("Set1", dpt_pcs_maj3[[Classe_sociale]])(dpt_pcs_maj3[[Classe_sociale]]),
-    # fillOpacity = 0.8,
-    # label = ~as.character(dpt_pcs_maj3[[Classe_sociale]]),
-    # popup = ~paste(Classe_sociale, ": ",dpt_pcs_maj3[[Classe_sociale]])) 
-carte_pcs
+
+
+# carte_pcs <-  leaflet(dpt_pcs_maj3) |> 
+#   addTiles() |>
+#   setView(lat = 46.2276, lng = 2.2137, zoom = 5) |> 
+#   addCircleMarkers(
+#     lng=~lon, lat=~lat,
+#     radius = 5,
+#     color = "red")
+#     # fillColor = ~colorFactor("Set1", dpt_pcs_maj3[[Classe_sociale]])(dpt_pcs_maj3[[Classe_sociale]]),
+#     # fillOpacity = 0.8,
+#     # label = ~as.character(dpt_pcs_maj3[[Classe_sociale]]),
+#     # popup = ~paste(Classe_sociale, ": ",dpt_pcs_maj3[[Classe_sociale]])) 
+# carte_pcs
 
 
 
