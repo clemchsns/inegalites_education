@@ -132,13 +132,23 @@ summary(fr_bac_academie)
 
 importfr_effectif_sexe = read.csv("data/fr_college_effectifs_niveau_sexe_lv.csv",sep=";",header=TRUE)
 fr_effectif_sexe_reduit = importfr_effectif_sexe[,c(1,2,7,9,16,20,21,31,35,36,46,50,51,61,65,66)]
-colnames(fr_effectif_sexe_reduit) <- c("Rentree scolaire","Région académique","Nom","Secteur",
+colnames(fr_effectif_sexe_reduit) <- c("Rentree scolaire","Region_academique","Nom","Secteur",
                                        "Nb eleves total 6eme","Nb 6eme filles","Nb 6eme garçons",
                                        "Nb eleves total 5eme","Nb 5eme filles","Nb 5eme garçons",
                                        "Nb eleves total 4eme","Nb 4eme filles","Nb 4eme garçons",
                                        "Nb eleves total 3eme","Nb 3eme filles","Nb 3eme garçons")
 
-# fr_effectif_sexe_reduit
+fr_effectif_sexe_reduit$Region_academique <- as.factor(fr_effectif_sexe_reduit$Region_academique)
+levels(fr_effectif_sexe_reduit$Region_academique) <- c("Auvergne-Rhône-Alpes","Bourgogne-Franche-Comté",
+                                                         "Bretagne","Centre-Val de Loire","Corse","Grand Est",
+                                                         "GUADELOUPE","GUYANE","Hauts-de-France","Île-de-France",
+                                                         "LA-REUNION","MARTINIQUE","MAYOTTE","Normandie","Nouvelle-Aquitaine",
+                                                         "Occitanie","Pays de la Loire","Provence-Alpes-Côte d'Azur")
+
+fr_effectif_sexe_2 <- fr_effectif_sexe_reduit |>
+  filter(Region_academique!="GUADELOUPE"&Region_academique!="GUYANE"&Region_academique!="LA-REUNION"&Region_academique!="MARTINIQUE"&Region_academique!="MAYOTTE")
+
+summary(fr_effectif_sexe)
 
 
 liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
@@ -342,9 +352,22 @@ voies <- ggplot(df_voies_professionnelles) +
 
 # regions <- read_sf("data/regions-20180101-shp/")
 # regions1 <- ms_simplify(regions)
-region4 <- merge(x = regions1, y= fr_effectif_sexe_reduit, by.x = )
+region4 <- merge(x = regions1, y= fr_effectif_sexe, by.x ="nom",by.y = "Région académique")
 
-# Commentaires graphiques ---
+region4_filtre <- region4 |> 
+  select()
+
+coord_genre <- st_coordinates(region4)
+longitude <- coord_genre[,"X"]
+latitude <- coord_genre[,"Y"]
+
+carte_effectif_sexe <- leaflet() |>
+  addTiles() |> 
+  setView(lng = 2.80, lat = 46.80, zoom = 5) |> 
+  addMarkers(longitude, latitude,clusterOptions = markerClusterOptions())
+  
+carte_effectif_sexe
+### Commentaires graphiques ---
 
 # PCS
 # Présentation onglet socio-économique : 
