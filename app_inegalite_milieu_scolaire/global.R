@@ -367,7 +367,7 @@ carte_effectif_sexe <- leaflet() |>
   setView(lng = 2.80, lat = 46.80, zoom = 5) |> 
   addMarkers(longitude, latitude,clusterOptions = markerClusterOptions())
   
-carte_effectif_sexe
+# carte_effectif_sexe
 ### Commentaires graphiques ---
 
 # PCS
