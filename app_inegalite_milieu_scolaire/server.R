@@ -123,23 +123,36 @@ shinyServer(function(input, output) {
   })
   
   # PCS au lycee
-  output$camembert_lycee <- renderPlot({
-    pie <- ggplot(df_PCS)+
-      aes(x="",y="Pct_admis_baccalaureat",fill=Origine_sociale)+
-      geom_bar(width = 1,stat="identity")+
-      xlab("")+ylab("")+
-      coord_polar("y",start=0)+
-      theme_minimal()+
-      ggtitle("Répartition des PCS au lycée")+
-      theme(plot.title = element_text(hjust = 0.5))
-    pie
+  output$camembert_lycee <- renderPlotly({
+    # pie <- ggplot(df_PCS)+
+    #   aes(x="",y="Pct_admis_baccalaureat",fill=Origine_sociale)+
+    #   geom_bar(width = 1,stat="identity")+
+    #   xlab("")+ylab("")+
+    #   coord_polar("y",start=0)+
+    #   theme_minimal()+
+    #   ggtitle("Répartition des PCS au lycée")+
+    #   theme(plot.title = element_text(hjust = 0.5))
+    # pie
+    
+    
+    df_PCS_renomme <- data.frame("Categorie"= Origine_sociale, Pct_admis_baccaulareat)
+    fig <- plot_ly(df_PCS_renomme, labels = ~Categorie, values = ~Pct_admis_baccaulareat, type = 'pie')
+    
+    fig <- fig |> layout(title = 'Répartition des PCS au lycée',
+                          
+                          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                          
+                          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+    
+    fig
+    
     
   })
   
   # Reussite bac selon PCS au lycee
   output$reussite_bac_PCS <- renderPlot({
     df_courbe_reussite_bac <- fr_reussite_bac |> dplyr::filter(Origine_sociale==input$origine_sociale)
-    # amPlot(Annee~`Pourcentage d'admis au baccalaureat general`,data = df_courbe_reussite_bac, type="l")
     ggplot(df_courbe_reussite_bac)+
       geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat general`,color="baccalauréat général"))+
       geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat technologique`,color="baccalauréat technologique"))+
