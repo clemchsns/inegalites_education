@@ -16,28 +16,6 @@ library(shinyWidgets)
 library(dashboardthemes)
 library(plotly)
 
-# Fonction ---
-if (!(require(jsonlite))) install.packages("jsonlite")
-mygeocode <- function(adresses){
-  # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
-  nominatim_osm <- function(address = NULL){
-    ## details: http://wiki.openstreetmap.org/wiki/Nominatim
-    ## fonction nominatim_osm proposée par D.Kisler
-    if(suppressWarnings(is.null(address)))  return(data.frame())
-    tryCatch(
-      d <- jsonlite::fromJSON(
-        gsub('\\@addr\\@', gsub('\\s+', '\\%20', address),
-             'http://nominatim.openstreetmap.org/search/@addr@?format=json&addressdetails=0&limit=1')
-      ), error = function(c) return(data.frame())
-    )
-    if(length(d) == 0) return(data.frame())
-    return(c(as.numeric(d$lon), as.numeric(d$lat)))
-  }
-  tableau <- t(sapply(adresses,nominatim_osm))
-  colnames(tableau) <- c("lon","lat")
-  return(tableau)
-}
-
 # -- Importation --
 
 # Enseignants par élèves
@@ -333,8 +311,9 @@ dpt_pcs_maj3 <- dpt_pcs_maj |>
   filter(Valeur == max(Valeur, na.rm=TRUE))
 dpt_pcs_maj3
 
-
-
+centro <- st_centroid(dpt$geometry) 
+centro <- st_transform(centro,crs=4326)
+centro
 
 # carte_pcs <-  leaflet(dpt_pcs_maj3) |> 
 #   addTiles() |>
