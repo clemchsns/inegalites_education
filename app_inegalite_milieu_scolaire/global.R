@@ -13,6 +13,7 @@ library(rnaturalearthdata)
 library(rnaturalearth)
 library(BH)
 library(shinyWidgets)
+library(dashboardthemes)
 
 # -- Importation --
 
@@ -125,6 +126,11 @@ fr_bac_academie <- importfr_bac_academie[,c(1:3,5,8:21)]
 fr_bac_academie[,c(2:3)] <- lapply(fr_bac_academie[,c(2:3)],factor)
 summary(fr_bac_academie)
 
+
+# Effectif filles et garçons au collège
+
+importfr_effectif_sexe = read.csv("data/fr_college_effectifs_niveau_sexe_lv.csv",sep=";",header=TRUE)
+# fr_effectif_sexe_reduit = importfr_effectif_sexe[,c(1,)]
 
 
 liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
