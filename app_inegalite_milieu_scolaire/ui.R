@@ -93,7 +93,14 @@ shinyUI(
                                  imageOutput("Mori_Arinori"),status = "danger"),
                              box(title = "Au Canada",p("L'éducation au Canada est gérée au niveau provincial et territorial plutôt qu'au niveau fédéral. Cela signifie que chaque province et territoire a mis en place son propre système d'éducation, et que l'histoire et l'évolution de l'éducation nationale varient d'une région à l'autre."))
                            )
-                           ) # ferme le tabPanel Personnages importants
+                           ), # ferme le tabPanel Personnages importants
+                  tabPanel("Pour en savoir plus",
+                           fluidPage(HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\"> Une petite vidéo sur le sujet des inégalités </h1>"), 
+                                     HTML('<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/od5i5s3ghPw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>'),
+                                     HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\"> Contribuez à résoudre les inégalités dans le milieu scolaire en faisant un don à cette <a href='https://afev.org/'>association</a> ! </h1>")
+                           )
+                    
+                  ) #ferme le tabPanel pour en savoir plus
                   ) # ferme le tabSetPanel
                 ), # ferme le tabItem Accueil
                 
