@@ -1,6 +1,7 @@
 # library(shiny)
 library(shinydashboard)
 library(dashboardthemes)
+library(plotly)
 
 shinyUI(
   dashboardPage(
@@ -145,7 +146,7 @@ shinyUI(
                                               ),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
-                                                plotOutput("camembert_lycee"),
+                                                plotlyOutput("camembert_lycee"),
                                                 type = 1)),
                                     fluidRow(style="margin:6px;",
                                              box(commg_camembert_lycee,width=300)

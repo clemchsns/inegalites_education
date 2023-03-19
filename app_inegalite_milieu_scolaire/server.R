@@ -3,6 +3,7 @@ source("global.R",local=T)
 
 # library(shiny)
 library(shinydashboard)
+library(plotly)
 
 
 shinyServer(function(input, output) {
@@ -123,28 +124,30 @@ shinyServer(function(input, output) {
   })
   
   # PCS au lycee
-  output$camembert_lycee <- renderPlot({
-    pie <- ggplot(df_PCS)+
-      aes(x="",y="Pct_admis_baccalaureat",fill=Origine_sociale)+
-      geom_bar(width = 1,stat="identity")+
-      xlab("")+ylab("")+
-      coord_polar("y",start=0)+
-      theme_minimal()+
-      ggtitle("Répartition des PCS au lycée")+
-      theme(plot.title = element_text(hjust = 0.5))
-    pie
+  output$camembert_lycee <- renderPlotly({
+    df_PCS_renomme <- data.frame("Categorie"= df_PCS$Origine_sociale, "Pct_admis_baccalaureat" = df_PCS$Pct_admis_baccalaureat)
+    
+    fig <- plot_ly(df_PCS_renomme, labels = ~Categorie, values = ~Pct_admis_baccalaureat, type = 'pie',
+                   showlegend = FALSE)
+  
+    fig1 <- fig |> layout(title = 'Répartition des PCS au lycée',
+                          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+    
+    fig1
+    
     
   })
   
   # Reussite bac selon PCS au lycee
   output$reussite_bac_PCS <- renderPlot({
     df_courbe_reussite_bac <- fr_reussite_bac |> dplyr::filter(Origine_sociale==input$origine_sociale)
-    # amPlot(Annee~`Pourcentage d'admis au baccalaureat general`,data = df_courbe_reussite_bac, type="l")
     ggplot(df_courbe_reussite_bac)+
-      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat general`,color="baccalauréat général"))+
-      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat technologique`,color="baccalauréat technologique"))+
-      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat professionnel`,col="baccalauréat professionnel"))+
-      labs(xlab = "Année", ylab = "Pourcentage d'admis",color="Bacs:",title="Réussite par bac selon la PCS")+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat general`,color="baccalauréat général",linewidth = 4))+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat technologique`,color="baccalauréat technologique",linewidth = 4))+
+      geom_line(aes(x = Annee,y=`Pourcentage d'admis au baccalaureat professionnel`,col="baccalauréat professionnel",linewidth = 4))+
+      labs(xlab = "Année", ylab = "Pourcentage d'admis",color="Bacs:",title="Réussite par baccalauréat selon la PCS")+
       theme(plot.title = element_text(hjust = 0.5))
   })
   
@@ -200,7 +203,7 @@ shinyServer(function(input, output) {
     
     m <- ggplot(d)+
       aes(x=TIME,y=nb_moy)+
-      geom_line(color="#87cefa")+
+      geom_line(color="#87cefa",linewidth = 4)+
       labs(xlabs = "Année", ylab="Nombre moyen d'enseignant par élèves", title = paste("Evolution du nombre d'enseignant par élèves en ",input$Pays_enseignant))+
       theme(plot.title = element_text(hjust = 0.5))
     m
@@ -216,7 +219,7 @@ shinyServer(function(input, output) {
     
     m <- ggplot(e)+
       aes(x=TIME,y=nb_moy)+
-      geom_line()+
+      geom_line(linewidth = 4)+
       labs(xlabs = "Année", ylab="Nombre moyen d'enseignant par élèves", title = paste("Evolution du nombre d'enseignant par élèves en",input$Pays_enseignant2))+
       theme(plot.title = element_text(hjust = 0.5))
     m
