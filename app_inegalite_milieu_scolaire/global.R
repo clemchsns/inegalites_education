@@ -381,12 +381,12 @@ Par exemple, des départements assez pauvres comme la Seine Saint-Denis ou encor
 A contrario, les départements plus riches comme Paris, les Hauts-de-Seine ou encore les Yvelines expose un tout autre point de vue. Dans ce cas, environ 50% des collégiens sont issues de classes sociales aisées. 
 Cette représentation graphique est très pertinente puisqu'elle permet d'analyser les contrastes au collège, selon le département.")
 
-# Répartition PCS au lycée : A FINIR
+# Répartition PCS au lycée 
 commg_camembert_lycee <- HTML("Deuxièmement, ce diagramme circulaire est lui aussi intéressant puisqu'il permet d'avoir une vision d'ensemble des Professions et Catégories Sociales des parents d'élèves au lycée. 
-                              Nous avons décidé de réaliser un graphique statique en faisant une moyenne des données disponibles entre 2014 et 2021. 
+                              Nous avons décidé de réaliser un graphique en faisant une moyenne des données disponibles entre 2014 et 2021. 
                               Ce choix nous a permis de simplifier nos manipulations car certaines années étaient incomplètes.")
 
-# Evolution réussite différents bacs selon PCS des parents : A FINIR
+# Evolution réussite différents bacs selon PCS des parents 
 commg_reussite_bac_PCS <- HTML("En dernier lieu, nous avons décidé de prendre en compte la dimension temporelle des données. 
                                 C'est pourquoi, ce graphique décrit l'évolution du taux de réussite au baccalauréat entre 2014 et 2020. 
                                 L'utilisateur doit choisir une Profession ou Catégorie Sociale afin de visualiser le pourcentage d'admis selon chaque type de baccalauréat.") 
