@@ -1,5 +1,6 @@
 # library(shiny)
 library(shinydashboard)
+library(dashboardthemes)
 
 shinyUI(
   dashboardPage(
@@ -21,9 +22,10 @@ shinyUI(
         menuItem("Bases de données",tabName = "BDD",icon = icon("database"))
       )),
     
-    dashboardBody(shinyDashboardThemes(
-      theme = "light_grey"
-    ),
+    dashboardBody(
+      shinyDashboardThemes(
+        theme = "grey_light"
+      ),
       tabItems(
         tabItem(tabName = "Accueil",
                 tabsetPanel(
@@ -187,7 +189,7 @@ shinyUI(
         ### Inégalités territoriales
                 tabItem("geo",
                         fluidPage(
-                          titlePanel("Les inégalités territoriales"),
+                          HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\"> Les inégalités territoriales </h1>"), 
                           tabsetPanel(
                             tabPanel("Condition d'apprentissage", # evolution du nombre d'enseignant par élève et le taux reussite
                                      fluidRow(style='margin:6px;',
@@ -280,6 +282,7 @@ shinyUI(
         # Inégalités de genre
         tabItem(tabName = "genre",
                 fluidPage(
+                  HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\"> Les inégalités de genre </h1>"), 
                   tabsetPanel(
                     tabPanel("Répartition des bacs",
                              fluidRow(style="margin:6px;",
