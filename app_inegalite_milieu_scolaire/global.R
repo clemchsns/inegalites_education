@@ -315,6 +315,11 @@ centro <- st_centroid(dpt$geometry)
 centro <- st_transform(centro,crs=4326)
 centro
 
+dep <- merge(x=fr_indicateur_segreg_college,y=dpt, by.x = "nom_dep", by.y = "NOM_DEPT")
+# dep1 <- dep |> 
+#   select(geometry) |> 
+#   mutate(dpt_pcs_maj3$Classe_sociale)
+
 # carte_pcs <-  leaflet(dpt_pcs_maj3) |> 
 #   addTiles() |>
 #   setView(lat = 46.2276, lng = 2.2137, zoom = 5) |> 
