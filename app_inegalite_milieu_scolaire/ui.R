@@ -118,7 +118,7 @@ shinyUI(
                           tabsetPanel(
                             tabPanel("Origines sociales",
                                      style='margin:6px;',
-                                     h1("L'impact de l'origine sociale sur la scolarité"),
+                                     HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">L'impact de l'origine sociale sur la scolarité</h1>"),
                                      box(comm_onglet_socio_economique,width = 300),
                                      
                                      h2(paste0("Des chiffres clés")),
@@ -158,7 +158,7 @@ shinyUI(
                             ), # ferme tabPanel Origine sociale
                             tabPanel("Privé ou public ?",
                                      style='margin:6px;',
-                                     h1("L'impact du privé et du public sur la scolarité"),
+                                     HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">L'impact du privé et du public sur la scolarité</h1>"),
                                      
                                      h2("Taux de réussite au Diplôme National du Brevet"),
                                      fluidRow(style="margin:6px;",
@@ -242,8 +242,8 @@ shinyUI(
                                                 leafletOutput("map_pcs_dpt"),
                                                 type = 1)
                                      ),
-                                     fluidRow(style="margin:6px;",
-                                              box(commg_map_pcs_dpt,width=300))
+                                     # fluidRow(style="margin:6px;",
+                                     #          box(commg_map_pcs_dpt,width=300))
                             ),
                             
                             tabPanel("Répartition des élèves en France",
