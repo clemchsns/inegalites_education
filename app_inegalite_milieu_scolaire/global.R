@@ -14,6 +14,7 @@ library(rnaturalearth)
 library(BH)
 library(shinyWidgets)
 library(dashboardthemes)
+library(plotly)
 
 # -- Importation --
 
@@ -130,7 +131,14 @@ summary(fr_bac_academie)
 # Effectif filles et garçons au collège
 
 importfr_effectif_sexe = read.csv("data/fr_college_effectifs_niveau_sexe_lv.csv",sep=";",header=TRUE)
-# fr_effectif_sexe_reduit = importfr_effectif_sexe[,c(1,)]
+fr_effectif_sexe_reduit = importfr_effectif_sexe[,c(1,2,7,9,16,20,21,31,35,36,46,50,51,61,65,66)]
+colnames(fr_effectif_sexe_reduit) <- c("Rentree scolaire","Région académique","Nom","Secteur",
+                                       "Nb eleves total 6eme","Nb 6eme filles","Nb 6eme garçons",
+                                       "Nb eleves total 5eme","Nb 5eme filles","Nb 5eme garçons",
+                                       "Nb eleves total 4eme","Nb 4eme filles","Nb 4eme garçons",
+                                       "Nb eleves total 3eme","Nb 3eme filles","Nb 3eme garçons")
+
+# fr_effectif_sexe_reduit
 
 
 liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
@@ -329,6 +337,12 @@ voies <- ggplot(df_voies_professionnelles) +
   scale_fill_brewer(palette="Blues")+
   theme(plot.title = element_text(hjust = 0.45))
 
+
+### Inégalités de genre 
+
+# regions <- read_sf("data/regions-20180101-shp/")
+# regions1 <- ms_simplify(regions)
+region4 <- merge(x = regions1, y= fr_effectif_sexe_reduit, by.x = )
 
 # Commentaires graphiques ---
 
