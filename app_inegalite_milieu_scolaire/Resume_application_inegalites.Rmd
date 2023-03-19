@@ -71,7 +71,7 @@ Elle est assez simple mais permet à l'utilisateur d'entrer dans notre
 application progressivement. Elle présente et définit les notions clés
 de notre projet.
 
-SCREEN PAGE D ACCUEIL
+![](images/paste-D73E84D4.png)
 
 Notre sujet traitant de diverses inégalités dans le milieu scolaire,
 nous avons souhaité les examiner dans différents onglets. La mise en
@@ -153,7 +153,7 @@ une croissance très importante des élèves réussissant en baccalauréats
 professionnels comme le montre le graphique ci-dessous. Ces données
 varient selon l'origine sociale de l'élève.
 
-SCREEN BACCALAUREAT SELON PCS
+![](images/paste-EB26810D.png)
 
 Dans cet onglet, nous avons essayé de privilégié le côté interactif pour
 stimuler l'utilisateur au maximum.\
@@ -164,7 +164,7 @@ constater les disparités plus facilement. Par exemple, le taux de
 réussite au Diplôme National du Brevet nous semblait être pertinent à
 étudier, c'est pourquoi nous avons réalisé cette carte :
 
-SCREEN DNB PAR ETAB\
+![](images/paste-FB596EB0.png)
 
 Afin d'avoir de multiples représentations, nous avons tenté de créer des
 cartes leaflet, sf et ggmap pour avoir un rendu assez varié.\
