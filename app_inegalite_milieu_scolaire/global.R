@@ -79,7 +79,6 @@ fr_taux_scolarisation_reg$Region <- factor(fr_taux_scolarisation_reg$Region)
 summary(fr_taux_scolarisation_reg)
 
 # France : réussite bac 
-
 import_fr_rb <- read.csv("data/Fr-reussite_bac_origine_sociale.csv",sep=";",dec=".",header=TRUE)
 colnames(import_fr_rb) <- c("Annee","Origine_sociale","Nombre d'admis au baccalaureat general","Pourcentage d'admis au baccalaureat general",
                             "Nombre d'admis au baccalaureat technologique","Pourcentage d'admis au baccalaureat technologique",
@@ -114,16 +113,6 @@ fr_dnb_etablissement <- fr_dnb_reduit|>
 summary(fr_dnb_etablissement)
 
 
-# France : boursier par établissement
-importfr_boursiers_dpt <- read.csv("data/Fr-boursiers-par-departement.csv",sep=";",header=TRUE)
-colnames(importfr_boursiers_dpt) <- c("Rentrée scolaire","Libellé formation","X_Type étab",
-                                      "Secteur","Numéro département","Libellé département",
-                                      "Nb boursiers", "Commentaire_Nb boursiers","Nb dernier échelon","Commentaire_Nb dernier échelon")
-fr_boursiers_dpt <- importfr_boursiers_dpt[,c(1,4:7)]
-fr_boursiers_dpt[,c(2:4)] <- lapply(fr_boursiers_dpt[,c(2:4)],factor)
-summary(fr_boursiers_dpt)
-
-
 # France : Bac par académie
 importfr_bac_academie <- read.csv("data/Fr-bac_par_academie.csv",sep=";",header=TRUE)
 colnames(importfr_bac_academie) <- c("Session" , "Académie","Sexe","Statut du candidat","Voie","Série",
@@ -145,7 +134,6 @@ liste_df = list("OCDE : Enseignants par élèves"=enseignant_par_eleves,
                 "France : Taux de scolarisation par région"=fr_taux_scolarisation_reg,
                 'France : Réussite par baccalauréat'=fr_reussite_bac,
                 "France : Obtention du brevet par établissement"=fr_dnb_etablissement,
-                "France : Nombre de boursiers par établissement"=fr_boursiers_dpt,
                 "France : Obtention du baccalauréat par académie"=fr_bac_academie)
 
 ### Accueil --- 
@@ -340,7 +328,7 @@ voies <- ggplot(df_voies_professionnelles) +
 
 # PCS
 # Présentation onglet socio-économique : 
-comm_onglet_socio_economique <- HTML("Dans cet onglet, nous pouvons analyser les disparités entre les élèves dues à leur origine sociale ou aux choix de leurs parents. 
+comm_onglet_socio_economique <- HTML("Dans cet onglet, nous pouvons analyser les disparités entre les élèves dues à leur origine sociale ou aux choix de leurs parents.\n
 Nous avons choisi de diviser en deux sous-onglets car l'origine sociale n'est pas nécessairement liée aux choix d'un enseignement public ou privé.")
 
 # Répartition PCS au collège
@@ -375,8 +363,13 @@ commg_amchartComparaisonPCS <- HTML("Ce diagramme en barres montre une répartit
                               ")
 
 # Inégalités territoriales 
-
 # Présentation onglet inégalités territoriales
+comm_onglet_territoriales <- HTML("Cet onglet nous a permis d'aborder le sujet des inégalités territoriales. 
+                                  Nous avons choisi d'étudier les pays de l'OCDE et de nous concentrer sur la situation en France pour quelques sujets.
+                                  Le lieu d'habitation d'un élève peut avoir des conséquences sur son éducation, par exemple, les effectifs dans une classe
+                                  peuvent largement jouer sur la concentration et donc indirectement sur la réussite scolaire. 
+                                  Ces facteurs influençant sur la réussite sont intéressants à étudier et c'est ce que nous avons choisi de faire.")
+
 
 
 # Evolution du nombre d'enseignant par élèves
@@ -393,19 +386,36 @@ commg_evol_enseignant_eleves <- HTML("Ces courbes nous permettent de visualiser 
 commg_carte_reussite_DNB <- HTML("Ensuite, la carte du taux de réussite au Diplôme National du Brevet selon l'année nous a paru être un graphique pertinent à analyser.")
 
 
-# PCS majoritaire par département
-# commg_carte_reussite_DNB <- HTML("")
+# PCS majoritaire par département : A FAIRE
+# commg_map_pcs_dpt <- HTML("")
+
+
 
 # Taux de scolarisation selon les régions
-commg_map_pcs_dpt <- HTML("Cette carte de France nous permet de visualiser la répartition des enfants scolarisés selon les régions.
+commg_taux_scolarisation_FR <- HTML("Cette carte de France nous permet de visualiser la répartition des enfants scolarisés selon les régions.
                           Nous pouvons remarquer que la région concentrant le plus d'élèves en France est l'Ile-de-France et celle avec le moins d'élèves est le Centre-Val-de-Loire.
                           Ces écarts peuvent impliquer des situations plus ou moins favorables pour l'apprentissage des élèves. 
                           N.B : Nous aurions voulu observer si chaque région présente un taux de scolarisation important ou non mais les données n'étaient pas disponibles.
                           ")
 
+# Etudiants en mobilité internationale
+commg_mobilite <- HTML("Enfin, nous avons choisi d'étudier un autre aspect des inégalités dans le milieu scolaire.
+                       En effet, certains pays présentent un taux très important d'élèves en mobilité internationale. 
+                       Cependant, cela peut être un frein à l'éducation pour certains étudiants étant en situation plus précaire.
+                       Par exemple, entre 2014 et 2020, nous pouvons observer qu'environ 50% des étudiants sont scolarisés à l'étranger.
+                       Cela peut être considéré comme une chance pour certains et un frein pour d'autres.")
 
+# Inégalités de genre 
+comm_onglet_genre <- HTML("Dans ce dernier onglet traitant des inégalités dans le système éducatif, nous avons choisi d'aborder le sujet des inégalités de genre.
+                          Dans un contexte de lutte pour l'égalité des sexes, cet aspect nous a paru pertinent à analyser.")
 
-
+# Répartition des bacs 
+commg_repartition_bac <- HTML("Ce graphique nous expose la situation française en 2021.
+                              Nous pouvons observer un total d'élèves masculins plus important au lycée lors de cette année.
+                              Ensuite, la voie professionnelle privilégiée est clairement le baccalauréat professionnel avec environ 7000 élèves.
+                              La répartition du choix des baccalauréats ne montrent pas de différence significative entre les deux genres,
+                              ce qui montre une réelle avancée sociale en France.
+                              Il pourrait aussi être intéressant d'étudier des pays moins développés pour analyser leur situation.")
 
 
 

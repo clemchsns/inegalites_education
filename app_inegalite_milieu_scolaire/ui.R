@@ -85,7 +85,8 @@ shinyUI(
                                  fluidRow(style="margin:6px;"),imageOutput("Mustafa_Kemal_Atatürk"),status = "info")
                            ),
                            fluidRow(
-                             box(title = "Au Japon", HTML("<u>Deux principaux acteurs :</u>"), h2("Gouvernement Japonais"),HTML("Le gouvernement japonais a fait de l'éducation une priorité nationale et a mis en place un système éducatif solide pour les générations futures."),h2("Mori Arinori"),HTML("Mori Arinori a été l'un des premiers réformateurs de l'éducation sous le gouvernement Meiji. 
+                             box(title = "Au Japon", HTML("<u>Deux principaux acteurs :</u>"), h2("Gouvernement Japonais"),HTML("Le gouvernement japonais a fait de l'éducation une priorité nationale et a mis en place un système éducatif solide pour les générations futures."),
+                                h2("Mori Arinori"),HTML("Mori Arinori a été l'un des premiers réformateurs de l'éducation sous le gouvernement Meiji. 
                                                                                                                                                                                                                                                                                                    Il a mis en place des réformes éducatives majeures, notamment la mise en place d'un système d'éducation nationale obligatoire pour tous les enfants, l'expansion de l'éducation pour les filles et la création de nombreuses écoles professionnelles. 
                                                                                                                                                                                                                                                                                                    Il a également joué un rôle clé dans la création de l'Université impériale de Tokyo, l'une des premières universités de recherche modernes du Japon."),
                                  fluidRow(style="margin:6px;"),
@@ -111,6 +112,7 @@ shinyUI(
                             tabPanel("Origines sociales",
                                      style='margin:6px;',
                                      h1("L'impact de l'origine sociale sur la scolarité"),
+                                     box(comm_onglet_socio_economique,width = 300),
                                      
                                      h2(paste0("Des chiffres clés")),
                                      fluidRow(
@@ -126,21 +128,26 @@ shinyUI(
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 plotOutput("treemap_college"),
-                                                type = 1)
+                                                type = 1)),
+                                     fluidRow(style="margin:6px;",
+                                              box(commg_treemap_college,width=300)
                                               ),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 plotOutput("camembert_lycee"),
-                                                type = 1)
+                                                type = 1)),
+                                    fluidRow(style="margin:6px;",
+                                             box(commg_camembert_lycee,width=300)
                                               ),
                                      # Modifier la mise en page de ce graphique : 
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
-                                                plotOutput("reussite_bac_PCS"), #, click = "plotClick"),
-                                                type = 1)
-                                              # downloadButton("telechargement","Téléchargement")
-                                              # downloadButton("downloadPlot","Télécharger le graphique
-                                     )
+                                                plotOutput("reussite_bac_PCS"), 
+                                                type = 1)),
+                                    fluidRow(style="margin:6px;",
+                                             box(commg_reussite_bac_PCS,width=300)
+                                    ),
+                                     
                             ), # ferme tabPanel Origine sociale
                             tabPanel("Privé ou public ?",
                                      style='margin:6px;',
@@ -151,15 +158,16 @@ shinyUI(
                                               withSpinner(
                                                 dataTableOutput("reussite_secteur"),
                                                 type = 1)),
+                                     fluidRow(style="margin:6px;",
+                                              box(commg_reussite_secteur,width = 300)),
                                      
                                      h2("Professions et Catégories Sociales selon le secteur d'enseignement"),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 amChartsOutput("amchartComparaisonPCS"),
                                                 type = 1)),
-                                     fluidRow(
-                                       verbatimTextOutput("comm_amchartComparaisonPCS")
-                                     )
+                                     fluidRow(style="margin:6px;",
+                                              box(commg_amchartComparaisonPCS,width = 300)),
                             )
                             
                           )
@@ -186,7 +194,9 @@ shinyUI(
                                                       ))
                                        
                                      ),
-                                     fluidRow(
+                                     fluidRow(style='margin:6px;',
+                                              box(comm_onglet_territoriales,width=300)),
+                                     fluidRow(style='margin:6px;',
                                        verbatimTextOutput("comparaison_evol_enseignant_eleves"),
                                        box(title="Evolution nombre d'enseignant par élèves",
                                            withSpinner(
@@ -199,11 +209,14 @@ shinyUI(
                                              type = 1)
                                        )
                                      ),
+                                     fluidRow(style='margin:6px;',
+                                              box(commg_evol_enseignant_eleves,width=300)),
+                                              
                                      box(title = "Carte du nombre d'élèves",status = "primary",width ="50000px",solidheader = TRUE,
                                          radioButtons(inputId="annee_carte",label = "Choisissez une année :",choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
                                          fluidRow(style="margin:6px;")
                                          # plotOutput("carte_evol_enseignant")
-                                     )
+                                     ),
                             ), # ferme tabPanel
                             tabPanel("Taux de réussite DNB par département",
                                      fluidRow(style="margin:6px;",
@@ -211,24 +224,31 @@ shinyUI(
                                               # withSpinner(
                                               #   plotOutput("carte_reussite_DNB"),
                                               #   type = 1)
-                                              )
+                                              ),
+                                     fluidRow(style="margin:6px",
+                                              box(commg_carte_reussite_DNB,width=300))
                             ),
+                            
                             tabPanel("PCS majoritaire par département",
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 leafletOutput("map_pcs_dpt"),
                                                 type = 1)
-                                     )
+                                     ),
+                                     fluidRow(style="margin:6px;",
+                                              box(commg_map_pcs_dpt,width=300))
                             ),
                             
-                            tabPanel("Taux de scolarisation en France",
+                            tabPanel("Répartition des élèves en France",
                                      fluidRow(style="margin:6px;",
-                                              h2("Taux de scolarisation selon les régions en France"),
+                                              h2("Répartition des enfants scolarisés selon les régions en France"),
                                               box(status = "primary",width ="50000px",solidheader = TRUE, 
                                                   withSpinner(
                                                     plotOutput("taux_scolarisation_FR"),
                                                     type = 1))
-                                     )
+                                     ),
+                                     fluidRow(style="margin:6px;",
+                                              box(commg_taux_scolarisation_FR,width=300))
                             ),
                             
                             tabPanel("Etudiants en mobilité internationale",
@@ -236,26 +256,35 @@ shinyUI(
                                                     choices = list("Australie","Autriche","Belgique","Brésil","Canada","Suisse","Chili","Colombie","Costa Rica","République Tchèque","Allemagne","Danemark","Espagne","Estonie","Finlande",
                                                                    "France","Royaume-Uni","Grèce","Hongrie","Irlande","Islande","Israël","Italie","Japon","Corée du Sud","Lituanie","Luxembourg","Lettonie","Mexique",
                                                                    "Pays-Bas","Norvège","Nouvelle-Zélande","OAVG","OEU","Pologne","Portugal","Slovaquie","Slovénie","Suède","Turquie","USA")),
+                            fluidRow(style="margin:6px;",
                                      withSpinner(
                                        # plotOutput("mobilite"),
                                        amChartsOutput("mobilite"),
-                                       type = 1)
-                            )
-                            
+                                       type = 1)),
+                            fluidRow(style="margin:6px;",
+                                     box(commg_mobilite,width=300))
+                            ),
+                          
                           )
                         )
                         ), # ferme le tabItem géo 
+        # Inégalités de genre
         tabItem(tabName = "genre",
                 fluidPage(
                   tabsetPanel(
                     tabPanel("Répartition des bacs",
-                             fluidRow(style='margin:6px;'),
+                             fluidRow(style="margin:6px;",
+                                      box(comm_onglet_genre,width=300)),
+                             fluidRow(style='margin:6px;',
                              box(title = "Répartition des baccalauréats selon le genre des élèves",status = "primary",width ="50000px",solidheader = TRUE, 
                                  withSpinner(
                                    plotOutput("repartition_bac"),
                                    type = 1))
-                    )
+                    ),
+                    fluidRow(style="margin:6px;",
+                             box(commg_repartition_bac,width=300))
                   )
+                )
                 )
                 
         ), # ferme tabItem genre
