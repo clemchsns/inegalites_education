@@ -21,7 +21,9 @@ shinyUI(
         menuItem("Bases de données",tabName = "BDD",icon = icon("database"))
       )),
     
-    dashboardBody(
+    dashboardBody(shinyDashboardThemes(
+      theme = "light_grey"
+    ),
       tabItems(
         tabItem(tabName = "Accueil",
                 tabsetPanel(
@@ -121,7 +123,7 @@ shinyUI(
                                      HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">L'impact de l'origine sociale sur la scolarité</h1>"),
                                      box(comm_onglet_socio_economique,width = 300),
                                      
-                                     h2(paste0("Des chiffres clés")),
+                                     HTML("<h2 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">Des chiffres clés</h2>"),
                                      fluidRow(
                                        valueBoxOutput("bac_origine_sociale") ,
                                        valueBoxOutput("bac_sans_emploi") ,
@@ -153,14 +155,14 @@ shinyUI(
                                                 type = 1)),
                                     fluidRow(style="margin:6px;",
                                              box(commg_reussite_bac_PCS,width=300)
-                                    ),
+                                    )
                                      
                             ), # ferme tabPanel Origine sociale
                             tabPanel("Privé ou public ?",
                                      style='margin:6px;',
                                      HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">L'impact du privé et du public sur la scolarité</h1>"),
                                      
-                                     h2("Taux de réussite au Diplôme National du Brevet"),
+                                     HTML("<h2 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">Taux de réussite au Diplôme National du Brevet</h2>"),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 dataTableOutput("reussite_secteur"),
@@ -168,13 +170,13 @@ shinyUI(
                                      fluidRow(style="margin:6px;",
                                               box(commg_reussite_secteur,width = 300)),
                                      
-                                     h2("Professions et Catégories Sociales selon le secteur d'enseignement"),
+                                     HTML("<h2 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">Professions et Catégories Sociales selon le secteur d'enseignement</h2>"),
                                      fluidRow(style="margin:6px;",
                                               withSpinner(
                                                 amChartsOutput("amchartComparaisonPCS"),
                                                 type = 1)),
                                      fluidRow(style="margin:6px;",
-                                              box(commg_amchartComparaisonPCS,width = 300)),
+                                              box(commg_amchartComparaisonPCS,width = 300))
                             )
                             
                           )
@@ -223,11 +225,11 @@ shinyUI(
                                          radioButtons(inputId="annee_carte",label = "Choisissez une année :",choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
                                          fluidRow(style="margin:6px;")
                                          # plotOutput("carte_evol_enseignant")
-                                     ),
+                                     )
                             ), # ferme tabPanel
                             tabPanel("Taux de réussite DNB par département",
                                      fluidRow(style="margin:6px;",
-                                              radioButtons(inputId="annee_geo",label = "Choisissez une année",inline = TRUE,choices=c(2014,2015,2016,2017,2018,2019,2020,2021)),
+                                              radioButtons(inputId="annee_geo",label = "Choisissez une année",inline = TRUE,choices=c(2014,2015,2016,2017,2018,2019,2020,2021))
                                               # withSpinner(
                                               #   plotOutput("carte_reussite_DNB"),
                                               #   type = 1)
@@ -241,14 +243,14 @@ shinyUI(
                                               withSpinner(
                                                 leafletOutput("map_pcs_dpt"),
                                                 type = 1)
-                                     ),
+                                     )
                                      # fluidRow(style="margin:6px;",
                                      #          box(commg_map_pcs_dpt,width=300))
                             ),
                             
                             tabPanel("Répartition des élèves en France",
                                      fluidRow(style="margin:6px;",
-                                              h2("Répartition des enfants scolarisés selon les régions en France"),
+                                              HTML("<h2 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\">Répartition des enfants scolarisés selon les régions en France</h2>"),
                                               box(status = "primary",width ="50000px",solidheader = TRUE, 
                                                   withSpinner(
                                                     plotOutput("taux_scolarisation_FR"),
@@ -270,7 +272,7 @@ shinyUI(
                                        type = 1)),
                             fluidRow(style="margin:6px;",
                                      box(commg_mobilite,width=300))
-                            ),
+                            )
                           
                           )
                         )
@@ -297,6 +299,7 @@ shinyUI(
         ), # ferme tabItem genre
         tabItem(tabName = "BDD",
                 fluidPage(
+                  HTML("<h1 style=\"color : white ; background-color : lightgrey ; text-align : center ; border-radius : 10px\"> Nos bases de données </h1>"),
                   selectizeInput(inputId = "affichage_table", label = "Choisissez une table à afficher",
                                  choices = names(liste_df)),
                   dataTableOutput("table")
