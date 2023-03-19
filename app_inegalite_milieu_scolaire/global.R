@@ -301,10 +301,29 @@ dpt_pcs_maj2 <- dpt_pcs_maj |>
                values_to = "Valeur") |> 
   filter(Valeur == max(Valeur, na.rm=TRUE))
 
-carte_pcs <- leaflet() |> 
-  addTiles() |> 
-  setView(lat = 46.2276, lng = 2.2137, zoom = 5)
+dpt_pcs_maj3 <- dpt_pcs_maj |> 
+  select(nom_dep,annee,proportion_tfav,proportion_fav,proportion_moy, proportion_defav,geometry) |> 
+  filter(annee==2021) |> 
+  group_by(nom_dep) |> 
+  pivot_longer(cols=c(proportion_tfav,proportion_fav,proportion_moy, proportion_defav),
+               names_to = "Classe_sociale",
+               values_to = "Valeur") |> 
+  filter(Valeur == max(Valeur, na.rm=TRUE))
+dpt_pcs_maj3
 
+
+carte_pcs <-  leaflet() |> 
+  addTiles() |>
+  setView(lat = 46.2276, lng = 2.2137, zoom = 5) |> 
+  addCircleMarkers(
+    lng=longitude, lat=latitude,
+    radius = 5,
+    color = "red")
+    # fillColor = ~colorFactor("Set1", dpt_pcs_maj3[[Classe_sociale]])(dpt_pcs_maj3[[Classe_sociale]]),
+    # fillOpacity = 0.8,
+    # label = ~as.character(dpt_pcs_maj3[[Classe_sociale]]),
+    # popup = ~paste(Classe_sociale, ": ",dpt_pcs_maj3[[Classe_sociale]])) 
+carte_pcs
 
 
 
